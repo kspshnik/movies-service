@@ -8,6 +8,7 @@
   --movie-padding-top: 50px;
   --movie-padding-side: 10px;
   --page-width: 320px;
+  --footer-height: 185px;
   background-color: #202020;
   }
 
@@ -22,6 +23,7 @@
    --movie-padding-top: 80px;
    --movie-padding-side: 30px;
    --page-width: 768px;
+   --footer-height: 95px;
 
    }
   }
@@ -38,5 +40,6 @@
     --movie-padding-top: 80px;
     --movie-padding-side: 70px;
     --page-width: 1280px;
+    --footer-height: 95px;
     }
   }
