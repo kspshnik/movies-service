@@ -1,0 +1,146 @@
+.header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+  height: 74px;
+  width: 100%;
+  box-sizing: border-box;
+  }
+
+.header_latent {
+  display: none;
+  }
+
+.header__icon {
+  width: 44px;
+  height: 44px;
+  }
+
+@media screen and (min-width: 1280px) {
+  .header__icon {
+    display: none;
+    }
+  }
+
+.header__menu {
+  list-style: none outside;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  }
+
+.header__item {
+  padding: 0 8px;
+  }
+
+.header__item:last-of-type {
+  margin-left: 845px;
+  }
+
+.header__account {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  }
+
+.header__link_favorites {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: #ffffff;
+  }
+
+.header__link_favorites:visited {
+  color: #ffffff;
+  }
+
+.header__link_films {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: #ffffff;
+  }
+
+.header__link_films:visited {
+  color: #ffffff;
+  }
+
+.header__link_account {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 0.92;
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+  text-decoration: none;
+  vertical-align: middle;
+  }
+
+.header__link_account-icon {
+  display: block;
+  background-image: url('../../images/AccountLogo.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #313131;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  margin-left: 8px;
+  }
+
+.header__login-item {
+
+  }
+
+.header__login-item:last-of-type {
+  padding: 0 20px;
+  }
+
+.header__signup-link {
+  font-size: 10px;
+  line-height: 1.6;
+  font-weight: 500;
+  text-decoration: none;
+  }
+
+.header__signup-link:visited {
+  color: #ffffff;
+  }
+
+.header__signin-link {
+  font-size: 10px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: #000000;
+  background-color: #3DDC84;
+  padding: 8px 20px;
+  border-radius: 3px;
+  text-decoration: none;
+  }
+
+.header__signin-link:visited {
+  color: #000000;
+  }
+
+@media screen and (min-width: 768px) {
+  .header__signup-link {
+    font-size: 12px;
+    line-height: 1.33;
+    }
+  .header__signin-link {
+    font-size: 12px;
+    line-height: 1.33;
+    }
+
+
+  }

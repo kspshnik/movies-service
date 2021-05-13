@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Switch, Route, useHistory } from 'react-router-dom';
 import './App.css';
 
+import Header from "../Header/Header";
+
 function App() {
   const getMoviesCount = () => {
     const rootElement = document.documentElement;
     return parseInt(getComputedStyle(rootElement).getPropertyValue('--movies_count'));
   }
   const [columnsCount, setColumnsCount] = useState(getMoviesCount());
+  const [isLoggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     const setColumns = () => {
@@ -18,28 +21,8 @@ function App() {
   },[])
   return (
     <div className="page typo">
-     <Header isLoggedIn = {isLoggedIn} />
-      <Switch>
-        <Route path='/signin'>
-         <SignInPage />
-        </Route>
-        <Route path='/signup'>
-      <SignUpPage />
-      </Route>
-      <Route path='/profile'>
-        <ProfilePage />
-      </Route>
-      <Route path='/movies'>
-       <MoviesPage />
-      </Route>
-      <Route path='saved-movies'>
-        <FavoritesPage />
-      </Route>
-      <Route exact path='/'>
-      <LandingPage />
-      </Route>
-    </Switch>
-  //    <Footer />
+     <Header isLoggedIn = {isLoggedIn} isHamburger = {columnsCount < 4} />
+
     </div>
   );
 }

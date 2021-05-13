@@ -1,7 +1,6 @@
 .page {
   margin: 0 auto;
   width: var(--page-width);
-  outline: 5px solid red;
   }
 
 .typo {
