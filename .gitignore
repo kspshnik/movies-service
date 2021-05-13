@@ -37,4 +37,5 @@ pixel-perfect_*.*
 *.code-workspace
 .eslintcache
 
+.idea/
 *.env
