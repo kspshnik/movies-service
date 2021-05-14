@@ -1,6 +1,7 @@
 .page {
   margin: 0 auto;
   width: var(--page-width);
+  position: relative;
   }
 
 .typo {
