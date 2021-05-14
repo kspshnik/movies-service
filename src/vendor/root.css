@@ -6,7 +6,6 @@
   --movie-gap-v: 20px;
   --movie-gap-h: 0;
   --movie-padding-top: 50px;
-  --movie-padding-side: 10px;
   --page-width: 320px;
   --header-height: 74px;
   --footer-height: 185px;
@@ -22,7 +21,6 @@
    --movie-gap-v: 36px;
    --movie-gap-h: 30px;
    --movie-padding-top: 80px;
-   --movie-padding-side: 30px;
    --page-width: 768px;
    --footer-height: 95px;
 
@@ -39,7 +37,6 @@
     --movie-gap-v: 32px;
     --movie-gap-h: 20px;
     --movie-padding-top: 80px;
-    --movie-padding-side: 70px;
     --page-width: 1280px;
     --footer-height: 95px;
     }

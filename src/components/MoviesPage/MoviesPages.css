@@ -1,0 +1,7 @@
+.movies-list {
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  }
+
+.movies-list_favourites {
+  padding-bottom: 30px;
+  }

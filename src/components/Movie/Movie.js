@@ -13,25 +13,27 @@ function MovieLikeButton({isLiked, onLike, onDislike}){
 
 function MovieDeleteButton({onMovieDislike}){
   return (
-    <button className='movie__delete' onClick={onMovieDislike} type='button'></button>
+    <button className='movie__delete' onClick={onMovieDislike} type='button'>+</button>
   )
 }
 
 export function Movie({movie, onMovieLike, onMovieDislike}) {
   const {  duration, trailer, thumbnail, nameRU, nameEN, owner, movieId, description } = movie;
-  const { currentUserId } = useContext(currentUserContext);
+ // const { currentUserId } = useContext(currentUserContext);
   const getDuration = (duration) => {
     let mins = parseInt(duration);
     return `${Math.floor(mins / 60)}:${(mins % 60)}`;
   }
-
+  const currentUserId = '84848';
+  console.log('Called with following object:');
+  console.dir(movie);
   return (
     <li className='movie'>
       <img className='movie__thumbnail' src={thumbnail} alt={description}/>
       <div className='movie__container'>
         <div className='movie__info'>
          <p className='movie__name'>{nameRU}</p>
-         <MovieDeleteButton isLiked={owner === currentUserId} onDislike={onMovieDislike} />
+          <MovieLikeButton isLiked={owner === currentUserId} onLike={onMovieLike} onDislike={onMovieDislike} />
         </div>
         <p className='movie__duration'>{getDuration(duration)}</p>
       </div>
@@ -41,25 +43,25 @@ export function Movie({movie, onMovieLike, onMovieDislike}) {
 
 export function FavMovie({movie, onMovieLike, onMovieDislike}) {
   const {  duration, trailer, thumbnail, nameRU, nameEN, owner, movieId, description } = movie;
-  const { currentUserId } = useContext(currentUserContext);
+  // const { currentUserId } = useContext(currentUserContext);
   const getDuration = (duration) => {
     let mins = parseInt(duration);
     return `${Math.floor(mins / 60)}:${(mins % 60)}`;
   }
-
+  const currentUserId = '84848';
   return (
     <li className='movie'>
       <img className='movie__thumbnail' src={thumbnail} alt={description}/>
       <div className='movie__container'>
         <div className='movie__info'>
           <p className='movie__name'>{nameRU}</p>
-          <MovieLikeButton isLiked={owner === currentUserId} onLike={onMovieLike} onDislike={onMovieDislike} />
+          <MovieDeleteButton isLiked={owner === currentUserId} onDislike={onMovieDislike} />
         </div>
         <p className='movie__duration'>{getDuration(duration)}</p>
       </div>
     </li>
   )
-};
+}
 
 MovieLikeButton.propTypes = {
   isLiked: PropTypes.bool.isRequired,
