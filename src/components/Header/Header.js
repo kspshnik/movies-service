@@ -69,13 +69,13 @@ function Header({isLoggedIn, isHamburger, onHamburgerOpen}){
 }
 
 HeaderMenu.propTypes = {
-  isHamburger: PropTypes.bool,
-  onHamburgerOpen: PropTypes.func,
+  isHamburger: PropTypes.bool.isRequired,
+  onHamburgerOpen: PropTypes.func.isRequired,
 }
 
 Header.propTypes = {
-  isLoggedIn: PropTypes.bool,
-  isHamburger: PropTypes.bool,
-  onHamburgerOpen: PropTypes.func,
+  isLoggedIn: PropTypes.bool.isRequired,
+  isHamburger: PropTypes.bool.isRequired,
+  onHamburgerOpen: PropTypes.func.isRequired,
 }
 export default Header;
