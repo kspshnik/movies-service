@@ -4,6 +4,7 @@ import './App.css';
 
 import Header from "../Header/Header";
 import HamburgerMenu from "../HamburgerMenu/HamburgerMenu";
+import Footer from "../Footer/Footer";
 
 function App() {
   const getMoviesCount = () => {
@@ -32,6 +33,7 @@ function App() {
   return (
     <div className="page typo">
      <Header isLoggedIn = {isLoggedIn} isHamburger = {columnsCount < 4} onHamburgerOpen={handleOpenHamburger}/>
+     <Footer />
      <HamburgerMenu isHamburgerOpen={isHamburgerOpen} onHamburgerOpen={handleOpenHamburger} onHamburgerClose={handleCloseHamburger}/>
     </div>
   );

@@ -3,10 +3,16 @@
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  padding: 0 14px;
+  padding: 0 5px;
   height: 74px;
   width: 100%;
   box-sizing: border-box;
+  }
+
+@media screen and (min-width: 768px) {
+  .header {
+    padding: 0;
+    }
   }
 
 .header_latent {
@@ -103,7 +109,7 @@
   }
 
 .header__login-item:last-of-type {
-  padding: 0 20px;
+  padding-left: 30px;
   }
 
 .header__signup-link {
@@ -144,3 +150,4 @@
 
 
   }
+
