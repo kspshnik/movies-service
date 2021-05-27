@@ -11,71 +11,75 @@ function HeaderMenu({ isHamburger, onHamburgerOpen }) {
   if (isHamburger) {
     return (
       <HamburgerIcon className='header__icon' onClick={onHamburgerOpen} />
-    )}
-  else {
-    return (
-       <ul className='header__menu'>
-          <li className='header__item'>
-            <Link className = 'header__link_films' to='/films'>
-              Фильмы
-            </Link>
-          </li>
-          <li className='header__item'>
-           <Link className = 'header__link_favorites' to='/saved-films'>
-            Сохраненные фильмы
-           </Link>
-          </li>
-          <li className='header__item'>
-            <Link to='/profile'>
-              <div className='header__account'>
-              <p className='header__link_account'>Аккаунт</p>
-              <div className="header__link_account-icon"></div>
-            </div>
-            </Link>
+    );
+  }
 
-          </li>
-        </ul>)
-}
-
-}
-
-function HeaderLoginMenu() {
   return (
     <ul className='header__menu'>
-      <li className='header__login-item'>
-        <Link className='header__signup-link'  to='/signup'>
-          Регистрация
+      <li className='header__item'>
+        <Link className='header__link_films' to='/films'>
+          Фильмы
         </Link>
       </li>
-      <li className='header__login-item'>
-        <Link className='header__signin-link'  to='/signin'>
-          Войти
+      <li className='header__item'>
+        <Link className='header__link_favorites' to='/saved-films'>
+          Сохраненные фильмы
         </Link>
+      </li>
+      <li className='header__item'>
+        <Link to='/profile'>
+          <div className='header__account'>
+            <p className='header__link_account'>Аккаунт</p>
+            <div className='header__link_account-icon' />
+          </div>
+        </Link>
+
       </li>
     </ul>
-  )
+  );
 }
 
-function Header({isLoggedIn, isHamburger, onHamburgerOpen}){
+const HeaderLoginMenu = () => (
+  <ul className='header__menu'>
+    <li className='header__login-item'>
+      <Link className='header__signup-link' to='/signup'>
+        Регистрация
+      </Link>
+    </li>
+    <li className='header__login-item'>
+      <Link className='header__signin-link' to='/signin'>
+        Войти
+      </Link>
+    </li>
+  </ul>
+);
+
+function Header({ isLoggedIn, isHamburger, onHamburgerOpen }) {
   const location = useLocation();
+  console.log(`isLoggedIn : ${isLoggedIn},\nisHamburger : ${isHamburger}`);
+  console.dir(onHamburgerOpen);
 
   return (
     <header className={(location.pathname === '/signup' || location.pathname === '/signin') ? 'header header_latent' : 'header'}>
-      <Logo />
-      {isLoggedIn ? <HeaderMenu isHamburger={isHamburger} onHamburgerOpen={onHamburgerOpen} /> : <HeaderLoginMenu /> }
+      <Link to='/'>
+        <Logo />
+      </Link>
+      { isLoggedIn
+        ? <HeaderMenu isHamburger={isHamburger} onHamburgerOpen={onHamburgerOpen} />
+        : <HeaderLoginMenu />}
     </header>
 
-  )
+  );
 }
 
 HeaderMenu.propTypes = {
   isHamburger: PropTypes.bool.isRequired,
   onHamburgerOpen: PropTypes.func.isRequired,
-}
+};
 
 Header.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   isHamburger: PropTypes.bool.isRequired,
   onHamburgerOpen: PropTypes.func.isRequired,
-}
+};
 export default Header;
