@@ -40,6 +40,7 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  width: 100%;
   }
 
 .profile__separator {
@@ -114,4 +115,19 @@
   text-align: center;
   margin: 8px auto;
   color: #EE3465;
+  }
+
+@media screen and (min-width: 768px) {
+  .profile__inputs {
+    width: 410px;
+    }
+  .profile__input {
+    font-weight: 500;
+    }
+  .profile__submit {
+    font-size: 13px;
+    }
+  .profile__signout {
+    font-size: 13px;
+    }
   }
