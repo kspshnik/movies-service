@@ -7,7 +7,7 @@ import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import MoviesPage from '../MoviesPage/MoviesPage';
 import FavouriteMoviesPage from '../MoviesPage/FavouriteMoviesPage';
 import ProfilePage from '../ProfilePage/ProfilePage';
-import SignUpPage from '../SignupPage/SignUp';
+import SignUpPage from '../SignupPage/SignUpPage';
 import SignInPage from '../SigninPage/SignIn';
 import Footer from '../Footer/Footer';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
