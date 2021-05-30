@@ -20,6 +20,7 @@
   line-height: 1.26;
   letter-spacing: -0.04em;
   text-align: center;
+  margin: 0;
   }
 
 @media screen and (min-width: 768px){
