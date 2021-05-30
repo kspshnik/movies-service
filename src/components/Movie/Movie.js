@@ -21,8 +21,6 @@ export function Movie({ movie, onMovieLike, onMovieDislike }) {
     return `${Math.floor(mins / 60)}:${(mins % 60)}`;
   };
   const currentUserId = '84848';
-  console.log('Called with following object:');
-  console.dir(movie);
   return (
     <li className='movie'>
       <img className='movie__thumbnail' src={thumbnail} alt={description} />

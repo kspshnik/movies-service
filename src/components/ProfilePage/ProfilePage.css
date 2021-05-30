@@ -54,7 +54,8 @@
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  margin: 15px auto;
+  margin: 15px 0;
+  width: 100%;
   }
 
 .profile__label {

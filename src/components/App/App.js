@@ -7,6 +7,8 @@ import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import MoviesPage from '../MoviesPage/MoviesPage';
 import FavouriteMoviesPage from '../MoviesPage/FavouriteMoviesPage';
 import ProfilePage from '../ProfilePage/ProfilePage';
+import SignUpPage from '../SignupPage/SignUp';
+import SignInPage from '../SigninPage/SignIn';
 import Footer from '../Footer/Footer';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
@@ -19,7 +21,6 @@ function App() {
   // const [isLoggedIn, setLoggedIn] = useState(false);
   const [isHamburgerOpen, setHamburgerVisibility] = useState(false);
   const isLoggedIn = false;
-  console.log(getMoviesCount());
   const falseMovies = [
     {
       nameRU: 'Ложнофильм 1',
@@ -98,6 +99,18 @@ function App() {
             <ProfilePage
               onSubmitProfile={stubLogic}
               onSignOut={stubLogic} />
+          </ErrorBoundary>
+        </Route>
+        <Route path='/signup'>
+          <ErrorBoundary>
+            <SignUpPage
+              onSignUpSubmit={stubLogic} />
+          </ErrorBoundary>
+        </Route>
+        <Route path='/signin'>
+          <ErrorBoundary>
+            <SignInPage
+              onSignInSubmit={stubLogic} />
           </ErrorBoundary>
         </Route>
       </Switch>

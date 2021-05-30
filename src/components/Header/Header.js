@@ -56,20 +56,19 @@ const HeaderLoginMenu = () => (
 
 function Header({ isLoggedIn, isHamburger, onHamburgerOpen }) {
   const location = useLocation();
-  console.log(`isLoggedIn : ${isLoggedIn},\nisHamburger : ${isHamburger}`);
-  console.dir(onHamburgerOpen);
+  if (location.pathname !== '/signup' && location.pathname !== '/signin') {
+    return (
+      <header className='header'>
+        <Link to='/'>
+          <Logo />
+        </Link>
+        { isLoggedIn
+          ? <HeaderMenu isHamburger={isHamburger} onHamburgerOpen={onHamburgerOpen} />
+          : <HeaderLoginMenu />}
+      </header>
 
-  return (
-    <header className={(location.pathname === '/signup' || location.pathname === '/signin') ? 'header header_latent' : 'header'}>
-      <Link to='/'>
-        <Logo />
-      </Link>
-      { isLoggedIn
-        ? <HeaderMenu isHamburger={isHamburger} onHamburgerOpen={onHamburgerOpen} />
-        : <HeaderLoginMenu />}
-    </header>
-
-  );
+    );
+  } return '';
 }
 
 HeaderMenu.propTypes = {
