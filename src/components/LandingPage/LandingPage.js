@@ -1,10 +1,12 @@
 import * as React from 'react';
 
 import LandingLead from './LandingLead/LandingLead';
+import LandingNavBar from './LandingNavBar/LandingNavBar';
 
 const LandingPage = () => (
-
-  <LandingLead />
+  <>
+    <LandingLead />
+    <LandingNavBar />
+  </>
 );
-
 export default LandingPage;
