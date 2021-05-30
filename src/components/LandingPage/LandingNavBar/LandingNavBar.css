@@ -1,0 +1,47 @@
+.landing__navmenu {
+  padding: 25px 0;
+  margin: 0 auto;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  list-style: none outside;
+  background-color: #272727;
+  }
+
+.landing__navitem {
+  list-style: none outside;
+  padding: 0 12px;
+  }
+
+.landing__navitem:first-of-type {
+  padding-left: 0;
+  }
+
+.landing__navitem:last-of-type {
+  padding-right: 0;
+  }
+
+.landing__navlink {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+  text-decoration: underline;
+  color: #ffffff;
+  }
+
+.landing__navlink:visited {
+  color: #ffffff;
+  }
+
+@media screen and (min-width: 768px) {
+
+  .landing__navitem {
+    padding: 0 20px;
+    }
+
+  .landing__navlink {
+    font-size: 13px;
+    line-height: 1.23;
+    }
+  }
