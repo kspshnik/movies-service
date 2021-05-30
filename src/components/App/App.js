@@ -11,6 +11,7 @@ import SignUpPage from '../SignupPage/SignUpPage';
 import SignInPage from '../SigninPage/SignIn';
 import Footer from '../Footer/Footer';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import LandingPage from '../LandingPage/LandingPage';
 
 function App() {
   const getMoviesCount = () => {
@@ -111,6 +112,11 @@ function App() {
           <ErrorBoundary>
             <SignInPage
               onSignInSubmit={stubLogic} />
+          </ErrorBoundary>
+        </Route>
+        <Route exact path='/'>
+          <ErrorBoundary>
+            <LandingPage />
           </ErrorBoundary>
         </Route>
       </Switch>
