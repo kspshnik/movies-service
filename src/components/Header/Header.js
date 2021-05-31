@@ -56,7 +56,10 @@ const HeaderLoginMenu = () => (
 
 function Header({ isLoggedIn, isHamburger, onHamburgerOpen }) {
   const location = useLocation();
-  if (location.pathname !== '/signup' && location.pathname !== '/signin') {
+  if (location.pathname === '/'
+      || location.pathname === '/films'
+      || location.pathname === '/saved-films'
+      || location.pathname === '/profile') {
     return (
       <header className='header'>
         <Link to='/'>
