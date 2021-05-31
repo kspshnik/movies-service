@@ -25,7 +25,7 @@
 
 .landing__navmenu {
   padding: 25px 0;
-  margin: 0 auto;
+  margin: 0 -10px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -348,6 +348,11 @@
     padding: 0 30px;
     }
 
+  .landing__navmenu {
+    margin: 0 -30px;
+
+    }
+
   .landing__caption {
     font-size: 50px;
     line-height: 1.19;
@@ -503,6 +508,11 @@
     height: 580px;
     margin: -74px -70px 0 -70px;
     padding: 0 70px;
+    }
+
+  .landing__navmenu {
+    margin: 0 -70px;
+
     }
 
   .landing__section {
