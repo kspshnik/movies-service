@@ -39,7 +39,19 @@ const LandingPage = () => (
       </div>
     </section>
     <section id='tech' className='landing__section'>
-      sd
+      <h2 className='landing__title'>Технологии</h2>
+      <div className='landing__separator_black' />
+      <h3 className='landing__subtitle_xl'>7 технологий</h3>
+      <p className='landing__text landing__text_centered'>На курсе веб-разработки мы освоили технологии, которые применили в дипломном проекте.</p>
+      <div className='landing__tiles'>
+        <div className='landing__tile'>HTML</div>
+        <div className='landing__tile'>CSS</div>
+        <div className='landing__tile'>JS</div>
+        <div className='landing__tile'>React</div>
+        <div className='landing__tile'>Git</div>
+        <div className='landing__tile'>Express.js</div>
+        <div className='landing__tile'>mongoDB</div>
+      </div>
     </section>
     <section id='studend' className='landing__section'>yjt</section>
   </main>
