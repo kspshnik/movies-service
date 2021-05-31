@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 
 import './SearchBar.css';
 
-const ShortFilmsFilter = ({ isFiltering, onStartFiltering, onStopFiltering }) => (
-  <button
-    className={isFiltering ? 'search__radiobutton search__radiobutton_active' : 'search__radiobutton'}
-    onClick={isFiltering ? onStopFiltering : onStartFiltering}
-    type='button' />
+const ShortFilmsFilter = ({ isFiltering, onClickRadio }) => (
+  <div className='search__shortfilms'>
+    <button
+      className={isFiltering ? 'search__radiobutton search__radiobutton_active' : 'search__radiobutton'}
+      onClick={onClickRadio}
+      type='button' />
+    <p className='search__label'>Короткометражки</p>
+  </div>
 );
 
 function SearchBar({
-  term = '', isFiltering = false, onSearchSubmit, onStartFiltering, onStopFiltering,
+  term = '', isFiltering = false, onSearchSubmit, onClickRadio,
 }) {
   const [searchTerm, setSearchTerm] = useState(term);
   const isSearchEmpty = () => searchTerm.length > 2;
@@ -49,24 +52,21 @@ function SearchBar({
       </form>
       <ShortFilmsFilter
         isFiltering={isFiltering}
-        onStartFiltering={onStartFiltering}
-        onStopFiltering={onStopFiltering} />
+        onClickRadio={onClickRadio} />
     </section>
   );
 }
 
 ShortFilmsFilter.propTypes = {
   isFiltering: PropTypes.bool.isRequired,
-  onStartFiltering: PropTypes.func.isRequired,
-  onStopFiltering: PropTypes.func.isRequired,
+  onClickRadio: PropTypes.func.isRequired,
 };
 
 SearchBar.propTypes = {
   term: PropTypes.string.isRequired,
   isFiltering: PropTypes.bool.isRequired,
   onSearchSubmit: PropTypes.func.isRequired,
-  onStartFiltering: PropTypes.func.isRequired,
-  onStopFiltering: PropTypes.func.isRequired,
+  onClickRadio: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

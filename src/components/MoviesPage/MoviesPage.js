@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import SearchBar from '../SearchBar/SearchBar';
@@ -7,7 +7,7 @@ import { Movie } from '../Movie/Movie';
 
 import './MoviesPages.css';
 
-const MoviesPage = ({
+function MoviesPage({
   moviesFound,
   columns,
   onMovieLike,
@@ -15,24 +15,29 @@ const MoviesPage = ({
   term = '',
   isFiltering = false,
   onSearchSubmit,
-  onStartFiltering,
-  onStopFiltering,
-}) => (
-  <main className='movies-list'>
-    <SearchBar
-      term={term}
-      isFiltering={isFiltering}
-      onSearchSubmit={onSearchSubmit}
-      onStartFiltering={onStartFiltering}
-      onStopFiltering={onStopFiltering} />
-    <MoviesList
-      component={Movie}
-      allMovies={moviesFound}
-      columns={columns}
-      onMovieLike={onMovieLike}
-      onMovieDislike={onMovieDislike} />
-  </main>
-);
+}) {
+  const [isShortMovies, setShortMoviesState] = useState(isFiltering);
+
+  function triggerShortFilms() {
+    setShortMoviesState(() => !isShortMovies);
+  }
+
+  return (
+    <main className='movies-list'>
+      <SearchBar
+        term={term}
+        isFiltering={isShortMovies}
+        onSearchSubmit={onSearchSubmit}
+        onClickRadio={triggerShortFilms} />
+      <MoviesList
+        component={Movie}
+        allMovies={moviesFound}
+        columns={columns}
+        onMovieLike={onMovieLike}
+        onMovieDislike={onMovieDislike} />
+    </main>
+  );
+}
 
 MoviesPage.propTypes = {
   moviesFound: PropTypes.arrayOf(PropTypes.shape({
@@ -55,8 +60,6 @@ MoviesPage.propTypes = {
   term: PropTypes.string,
   isFiltering: PropTypes.bool,
   onSearchSubmit: PropTypes.func.isRequired,
-  onStartFiltering: PropTypes.func.isRequired,
-  onStopFiltering: PropTypes.func.isRequired,
 };
 
 MoviesPage.defaultProps = {
