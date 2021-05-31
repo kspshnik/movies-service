@@ -77,6 +77,7 @@ function SignInPage({ onSignInSubmit }) {
           className='credentials__form'
           aria-label='Форма входа в систему'>
           <fieldset className='credentials__inputs'>
+            <p className='credentials__label'>E-mail</p>
             <input
               id='signin-email-input'
               name='email'
@@ -94,6 +95,7 @@ function SignInPage({ onSignInSubmit }) {
               className='credentials__error-message'>
               {emailError}
             </span>
+            <p className='credentials__label'>Пароль</p>
             <input
               id='signin-password-input'
               name='password'
