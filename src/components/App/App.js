@@ -12,6 +12,7 @@ import SignInPage from '../SigninPage/SignIn';
 import Footer from '../Footer/Footer';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import LandingPage from '../LandingPage/LandingPage';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 function App() {
   const getMoviesCount = () => {
@@ -117,6 +118,11 @@ function App() {
         <Route exact path='/'>
           <ErrorBoundary>
             <LandingPage />
+          </ErrorBoundary>
+        </Route>
+        <Route path='*'>
+          <ErrorBoundary>
+            <NotFoundPage />
           </ErrorBoundary>
         </Route>
       </Switch>
