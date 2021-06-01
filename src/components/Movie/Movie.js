@@ -17,7 +17,7 @@ export function Movie({
   movie, isFavourite, onMovieLike, onMovieDislike,
 }) {
   const {
-    duration, image, nameRU,
+    duration, image, nameRU, trailerLink,
   } = movie;
 
   const thumbnail = `https://api.nomoreparties.co${image.url}`;
@@ -26,7 +26,9 @@ export function Movie({
     : image.name;
   return (
     <li className='movie'>
-      <img className='movie__thumbnail' src={thumbnail} alt={thumbnailAlt} />
+      <a target='_blank' href={trailerLink} rel='noreferrer'>
+        <img className='movie__thumbnail' src={thumbnail} alt={thumbnailAlt} />
+      </a>
       <div className='movie__container'>
         <div className='movie__info'>
           <p className='movie__name'>{nameRU}</p>
@@ -43,14 +45,16 @@ export function Movie({
 
 export function FavMovie({ movie, onMovieDislike }) {
   const {
-    duration, image, nameRU,
+    duration, image, nameRU, trailerLink,
   } = movie;
 
   const thumbnail = `https://api.nomoreparties.co${image.url}`;
 
   return (
     <li className='movie'>
-      <img className='movie__thumbnail' src={thumbnail} alt={nameRU} />
+      <a target='_blank' href={trailerLink} rel='noreferrer'>
+        <img className='movie__thumbnail' src={thumbnail} alt={nameRU} />
+      </a>
       <div className='movie__container'>
         <div className='movie__info'>
           <p className='movie__name'>{nameRU}</p>
@@ -80,9 +84,9 @@ Movie.propTypes = {
     director: PropTypes.string,
     description: PropTypes.string.isRequired,
     image: PropTypes.string,
-    trailer: PropTypes.string.isRequired,
+    trailerLink: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
-    movieId: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     owner: PropTypes.string,
     nameRU: PropTypes.string.isRequired,
     nameEM: PropTypes.string,
@@ -100,7 +104,7 @@ FavMovie.propTypes = {
     director: PropTypes.string,
     description: PropTypes.string.isRequired,
     image: PropTypes.string,
-    trailer: PropTypes.string.isRequired,
+    trailerLink: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
     movieId: PropTypes.string.isRequired,
     owner: PropTypes.string.isRequired,

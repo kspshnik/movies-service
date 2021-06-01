@@ -5,32 +5,26 @@ import './MoviesList.css';
 
 const MoviesList = ({
   component: Component,
-  allMovies,
+  movies,
   favourities,
-  columns,
   onMovieLike,
   onMovieDislike,
-  isFavouritesList,
-}) => {
-  const rows = (columns > 1) ? 4 : 5;
-  const movies = isFavouritesList ? allMovies : allMovies.slice(0, (rows * columns) - 1);
-  return (
-    <ul className='movies'>
-      {movies.map((movie) => (
-        <Component
-          key={movie.id}
-          movie={movie}
-          isFavourite={isFavouritesList || favourities.includes(movie.id)}
-          onMovieLike={onMovieLike}
-          onMovieDislike={isFavouritesList && onMovieDislike} />
-      ))}
+}) => (
+  <ul className='movies'>
+    {movies.map((movie) => (
+      <Component
+        key={movie.id}
+        movie={movie}
+        isFavourite={favourities.includes(movie.id)}
+        onMovieLike={onMovieLike}
+        onMovieDislike={onMovieDislike} />
+    ))}
 
-    </ul>
-  );
-};
+  </ul>
+);
 MoviesList.propTypes = {
   component: PropTypes.element.isRequired,
-  allMovies: PropTypes.arrayOf(PropTypes.shape({
+  movies: PropTypes.arrayOf(PropTypes.shape({
     country: PropTypes.string,
     year: PropTypes.string,
     duration: PropTypes.string.isRequired,
@@ -45,13 +39,8 @@ MoviesList.propTypes = {
     nameEM: PropTypes.string,
   })).isRequired,
   favourities: PropTypes.array.isRequired,
-  columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
-  isFavouritesList: PropTypes.bool,
-};
-MoviesList.defaultProps = {
-  isFavouritesList: false,
 };
 
 export default MoviesList;

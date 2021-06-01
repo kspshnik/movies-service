@@ -14,10 +14,10 @@ const ShortFilmsFilter = ({ isFiltering, onClickRadio }) => (
 );
 
 function SearchBar({
-  term = '', isFiltering = false, onSearchSubmit, onClickRadio,
+  term, isFiltering = false, onSearchSubmit, onClickRadio,
 }) {
   const [searchTerm, setSearchTerm] = useState(term);
-  const isSearchEmpty = () => searchTerm.length > 2;
+  const isSearchEmpty = () => searchTerm.length > 0;
   const [isSubmitDisabled, setSubmitDisabled] = useState(!isSearchEmpty());
   const handleSearchTermChange = (event) => {
     const input = event.target;

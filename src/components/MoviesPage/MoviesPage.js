@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import SearchBar from '../SearchBar/SearchBar';
 import MoviesList from '../MoviesList/MoviesList';
 import { Movie } from '../Movie/Movie';
+import MoreButton from './MoreButton';
+
+import searchMovies from '../../helpers/searchMovies';
 
 import './MoviesPages.css';
 
@@ -16,18 +19,28 @@ function MoviesPage({
 }) {
   const [search, setSearch] = useState('');
   const [isShort, setShort] = useState(false);
-  // const [isPreparingMovies, setPreparingMoviesState] = useState(false);
+  const [foundMovies, setFoundMovies] = useState([]);
+  const [rows, setRows] = useState((columns > 3) ? 3 : (6 - columns));
 
+  // const [isPreparingMovies, setPreparingMoviesState] = useState(false);
+  const increaseRows = () => {
+    setRows(() => rows + 1);
+  };
   useEffect(() => {
-    setSearch(localStorage.getItem('all-search') || '');
-    setShort(Boolean(localStorage.getItem('all-short')) || false);
+    if ('all-search' in localStorage) {
+      setSearch(localStorage.getItem('all-search'));
+    }
+    if ('all-short' in localStorage) {
+      setShort(Boolean(localStorage.getItem('all-short')));
+    }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('all-search', search);
   }, [search]);
+
   useEffect(() => {
-    localStorage.setItem('all-search', String(isShort));
+    localStorage.setItem('all-short', String(isShort));
   }, [isShort]);
 
   function triggerShortFilms() {
@@ -35,13 +48,17 @@ function MoviesPage({
   }
 
   function handleSearchSubmit(term) {
+    console.log(`Получен новый поиск из SearchBar: '${term}'!`);
     setSearch(term);
-    console.log(`Новый поиск: '${search}'.`);
   }
 
   useEffect(() => {
-    console.log(`Новые параметры поиска.\nСтрока поиска : '${search}',\nКороткометражки : ${isShort ? 'Да' : 'Нет'}.`);
-  }, [search, isShort]);
+    if (search.length > 0 || isShort) {
+      const tmp = searchMovies(allMovies, search, isShort);
+      console.dir(tmp);
+      setFoundMovies(tmp);
+    }
+  }, [search, isShort, allMovies]);
 
   return (
     <main className='movies-list'>
@@ -52,11 +69,13 @@ function MoviesPage({
         onClickRadio={triggerShortFilms} />
       <MoviesList
         component={Movie}
-        allMovies={allMovies}
+        movies={foundMovies.slice(0, (columns * rows - 1))}
         favourities={favourities}
         columns={columns}
         onMovieLike={onMovieLike}
         onMovieDislike={onMovieDislike} />
+      {<MoreButton onClick={increaseRows} /> && (foundMovies.length >= columns * rows) }
+
     </main>
   );
 }
