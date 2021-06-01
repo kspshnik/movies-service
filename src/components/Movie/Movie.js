@@ -21,9 +21,12 @@ export function Movie({
   } = movie;
 
   const thumbnail = `https://api.nomoreparties.co${image.url}`;
+  const thumbnailAlt = (image.alternativeText.length > 0)
+    ? image.alternativeText.length
+    : image.name;
   return (
     <li className='movie'>
-      <img className='movie__thumbnail' src={thumbnail} alt={nameRU} />
+      <img className='movie__thumbnail' src={thumbnail} alt={thumbnailAlt} />
       <div className='movie__container'>
         <div className='movie__info'>
           <p className='movie__name'>{nameRU}</p>

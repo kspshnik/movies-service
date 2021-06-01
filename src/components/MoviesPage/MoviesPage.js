@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import SearchBar from '../SearchBar/SearchBar';
@@ -13,21 +13,42 @@ function MoviesPage({
   columns,
   onMovieLike,
   onMovieDislike,
-  term = '',
-  isFiltering = false,
-  onSearchSubmit,
 }) {
-  const [isShortMovies, setShortMoviesState] = useState(isFiltering);
+  const [search, setSearch] = useState('');
+  const [isShort, setShort] = useState(false);
+  // const [isPreparingMovies, setPreparingMoviesState] = useState(false);
+
+  useEffect(() => {
+    setSearch(localStorage.getItem('all-search') || '');
+    setShort(Boolean(localStorage.getItem('all-short')) || false);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('all-search', search);
+  }, [search]);
+  useEffect(() => {
+    localStorage.setItem('all-search', String(isShort));
+  }, [isShort]);
 
   function triggerShortFilms() {
-    setShortMoviesState(() => !isShortMovies);
+    setShort(() => !isShort);
   }
+
+  function handleSearchSubmit(term) {
+    setSearch(term);
+    console.log(`Новый поиск: '${search}'.`);
+  }
+
+  useEffect(() => {
+    console.log(`Новые параметры поиска.\nСтрока поиска : '${search}',\nКороткометражки : ${isShort ? 'Да' : 'Нет'}.`);
+  }, [search, isShort]);
+
   return (
     <main className='movies-list'>
       <SearchBar
-        term={term}
-        isFiltering={isShortMovies}
-        onSearchSubmit={onSearchSubmit}
+        term={search}
+        isFiltering={isShort}
+        onSearchSubmit={handleSearchSubmit}
         onClickRadio={triggerShortFilms} />
       <MoviesList
         component={Movie}
@@ -47,10 +68,10 @@ MoviesPage.propTypes = {
     duration: PropTypes.string.isRequired,
     director: PropTypes.string,
     description: PropTypes.string.isRequired,
-    image: PropTypes.string,
+    image: PropTypes.object,
     trailer: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
-    movieId: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     owner: PropTypes.string,
     nameRU: PropTypes.string.isRequired,
     nameEM: PropTypes.string,
@@ -59,14 +80,7 @@ MoviesPage.propTypes = {
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
-  term: PropTypes.string,
-  isFiltering: PropTypes.bool,
-  onSearchSubmit: PropTypes.func.isRequired,
-};
 
-MoviesPage.defaultProps = {
-  term: '',
-  isFiltering: false,
 };
 
 export default MoviesPage;

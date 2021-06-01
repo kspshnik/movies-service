@@ -15,10 +15,6 @@ import LandingPage from '../LandingPage/LandingPage';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 function App() {
-  const emptySearch = {
-    term: '',
-    shortMovie: false,
-  };
   const getMoviesCount = () => {
     const rootElement = document.documentElement;
     return parseInt(getComputedStyle(rootElement).getPropertyValue('--movies_count'), 10);
@@ -27,8 +23,6 @@ function App() {
   // const [isLoggedIn, setLoggedIn] = useState(false);
   const [isHamburgerOpen, setHamburgerVisibility] = useState(false);
 
-  const [searchStatus, setNewSearch] = useState(emptySearch);
-  const [favSearchStatus, setNewFavSearch] = useState(emptySearch);
   const isLoggedIn = false;
   const favourities = [10, 11, 12, 13, 14, 15, 16, 17, 18];
   const mockAllMovies = [
@@ -954,29 +948,21 @@ function App() {
       updated_at: '2020-12-02T21:18:53.210Z',
     },
   }];
-
   useEffect(() => {
     const setColumns = () => {
       setColumnsCount(getMoviesCount());
     };
     window.addEventListener('resize', setColumns);
-    setNewSearch(JSON.parse(localStorage.getItem('search')));
-    setNewFavSearch(JSON.parse(localStorage.getItem('fav-search')));
     return () => window.removeEventListener('resize', setColumns);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('search', JSON.stringify(searchStatus));
-  }, [searchStatus]);
-  useEffect(() => {
-    localStorage.setItem('fav-search', JSON.stringify(favSearchStatus));
-  });
   function handleOpenHamburger() {
     setHamburgerVisibility(true);
   }
   function handleCloseHamburger() {
     setHamburgerVisibility(false);
   }
+
   const stubLogic = () => null;
   return (
     <div className='page typo'>
@@ -993,13 +979,8 @@ function App() {
               allMovies={mockAllMovies}
               favourities={favourities}
               columns={columnsCount}
-              isFiltering={false}
-              term=''
               onMovieDislike={stubLogic}
-              onMovieLike={stubLogic}
-              onStopFiltering={stubLogic}
-              onStartFiltering={stubLogic}
-              onSearchSubmit={stubLogic} />
+              onMovieLike={stubLogic} />
           </ErrorBoundary>
         </Route>
 
@@ -1008,13 +989,8 @@ function App() {
             <FavouriteMoviesPage
               favouriteMovies={mockFavMovies}
               columns={columnsCount}
-              isFiltering={false}
-              term=''
               onMovieDislike={stubLogic}
-              onMovieLike={stubLogic}
-              onStopFiltering={stubLogic}
-              onStartFiltering={stubLogic}
-              onSearchSubmit={stubLogic} />
+              onMovieLike={stubLogic} />
           </ErrorBoundary>
         </Route>
         <Route path='/profile'>
