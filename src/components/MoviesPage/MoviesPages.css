@@ -27,8 +27,16 @@
   color: #FFFFFF;
   }
 
+.movies-list__error {
+  font-size: 24px;
+  color: #EE3465;
+  }
+
 @media screen and (min-width: 768px) {
   .movies-list__more {
     width: 320px;
+    }
+  .movies-list__error {
+    font-size: 48px;
     }
   }

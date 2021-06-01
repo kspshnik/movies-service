@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './SearchBar.css';
@@ -16,13 +16,15 @@ const ShortFilmsFilter = ({ isFiltering, onClickRadio }) => (
 function SearchBar({
   term, isFiltering = false, onSearchSubmit, onClickRadio,
 }) {
-  const [searchTerm, setSearchTerm] = useState(term);
-  const isSearchEmpty = () => searchTerm.length > 0;
-  const [isSubmitDisabled, setSubmitDisabled] = useState(!isSearchEmpty());
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSubmitDisabled, setSubmitDisabled] = useState(true);
+  useEffect(() => {
+    setSearchTerm(term);
+  }, [term]);
   const handleSearchTermChange = (event) => {
     const input = event.target;
     setSearchTerm(input.value);
-    setSubmitDisabled(!isSearchEmpty());
+    setSubmitDisabled(input.value.length < 2);
   };
   const handleSubmit = (event) => {
     event.preventDefault();

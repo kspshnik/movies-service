@@ -16,6 +16,9 @@ function MoviesPage({
   columns,
   onMovieLike,
   onMovieDislike,
+  isLoading,
+  isError,
+  errorMessage,
 }) {
   const [search, setSearch] = useState('');
   const [isShort, setShort] = useState(false);
@@ -64,39 +67,40 @@ function MoviesPage({
         isFiltering={isShort}
         onSearchSubmit={handleSearchSubmit}
         onClickRadio={triggerShortFilms} />
-      <MoviesList
-        component={Movie}
-        movies={foundMovies.slice(0, (columns * rows - 1))}
-        favourities={favourities}
-        columns={columns}
-        onMovieLike={onMovieLike}
-        onMovieDislike={onMovieDislike} />
-      {<MoreButton onClick={increaseRows} /> && (foundMovies.length >= columns * rows) }
+
+      {isError ? <p className='movies-list__error'>{errorMessage}</p>
+        : (
+          <MoviesList
+            component={Movie}
+            movies={foundMovies.slice(0, (columns * rows - 1))}
+            favourities={favourities}
+            columns={columns}
+            onMovieLike={onMovieLike}
+            onMovieDislike={onMovieDislike}
+            isLoading={isLoading} />
+        ) }
+      {<MoreButton onClick={increaseRows} />
+       && ((foundMovies.length >= columns * rows) && !isLoading && !isError)}
 
     </main>
   );
 }
 
 MoviesPage.propTypes = {
-  allMovies: PropTypes.arrayOf(PropTypes.shape({
-    country: PropTypes.string,
-    year: PropTypes.string,
-    duration: PropTypes.number.isRequired,
-    director: PropTypes.string,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.object,
-    trailer: PropTypes.string.isRequired,
-    thumbnail: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    owner: PropTypes.string,
-    nameRU: PropTypes.string.isRequired,
-    nameEM: PropTypes.string,
-  })).isRequired,
-  favourities: PropTypes.array.isRequired,
+  allMovies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  favourities: PropTypes.arrayOf(PropTypes.number).isRequired,
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool,
+  isError: PropTypes.bool,
+  errorMessage: PropTypes.string,
+};
 
+MoviesPage.defaultProps = {
+  isLoading: false,
+  isError: false,
+  errorMessage: '',
 };
 
 export default MoviesPage;

@@ -13,6 +13,8 @@ const FavouriteMoviesPage = ({
   onMovieLike,
   onMovieDislike,
   columns,
+  isError,
+  errorMessage,
 }) => {
   const [foundMovies, setFoundMovies] = useState([]);
   const [search, setSearch] = useState('');
@@ -20,7 +22,6 @@ const FavouriteMoviesPage = ({
 
   useEffect(() => {
     if ('fav-search' in localStorage) {
-      console.log('get fav-search');
       setSearch(localStorage.getItem('fav-search'));
     }
     if ('fav-short' in localStorage) {
@@ -51,36 +52,31 @@ const FavouriteMoviesPage = ({
         isFiltering={isShort}
         onSearchSubmit={handleSearchSubmit}
         onClickRadio={triggerShortFilms} />
-      <MoviesList
-        component={FavMovie}
-        movies={foundMovies}
-        favourities={[]}
-        columns={columns}
-        onMovieLike={onMovieLike}
-        onMovieDislike={onMovieDislike}
-        isFavouritesList />
+      {isError ? <p className='movies-list__error'>{errorMessage}</p>
+        : (
+          <MoviesList
+            component={FavMovie}
+            movies={foundMovies}
+            favourities={[]}
+            columns={columns}
+            onMovieLike={onMovieLike}
+            onMovieDislike={onMovieDislike}
+            isFavouritesList />
+        )}
     </main>
   );
 };
 
 FavouriteMoviesPage.propTypes = {
-  favouriteMovies: PropTypes.arrayOf(PropTypes.shape({
-    country: PropTypes.string,
-    year: PropTypes.string,
-    duration: PropTypes.number.isRequired,
-    director: PropTypes.string,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string,
-    trailer: PropTypes.string.isRequired,
-    thumbnail: PropTypes.string.isRequired,
-    movieId: PropTypes.string.isRequired,
-    owner: PropTypes.string,
-    nameRU: PropTypes.string.isRequired,
-    nameEM: PropTypes.string,
-  })).isRequired,
+  favouriteMovies: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
+  isError: PropTypes.bool,
+  errorMessage: PropTypes.string,
 };
-
+FavouriteMoviesPage.defaultProps = {
+  isError: false,
+  errorMessage: '',
+};
 export default FavouriteMoviesPage;
