@@ -15,6 +15,10 @@ import LandingPage from '../LandingPage/LandingPage';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 function App() {
+  const emptySearch = {
+    term: '',
+    shortMovie: false,
+  };
   const getMoviesCount = () => {
     const rootElement = document.documentElement;
     return parseInt(getComputedStyle(rootElement).getPropertyValue('--movies_count'), 10);
@@ -22,6 +26,9 @@ function App() {
   const [columnsCount, setColumnsCount] = useState(getMoviesCount());
   // const [isLoggedIn, setLoggedIn] = useState(false);
   const [isHamburgerOpen, setHamburgerVisibility] = useState(false);
+
+  const [searchStatus, setNewSearch] = useState(emptySearch);
+  const [favSearchStatus, setNewFavSearch] = useState(emptySearch);
   const isLoggedIn = false;
   const favourities = [10, 11, 12, 13, 14, 15, 16, 17, 18];
   const mockAllMovies = [
@@ -953,9 +960,17 @@ function App() {
       setColumnsCount(getMoviesCount());
     };
     window.addEventListener('resize', setColumns);
+    setNewSearch(JSON.parse(localStorage.getItem('search')));
+    setNewFavSearch(JSON.parse(localStorage.getItem('fav-search')));
     return () => window.removeEventListener('resize', setColumns);
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('search', JSON.stringify(searchStatus));
+  }, [searchStatus]);
+  useEffect(() => {
+    localStorage.setItem('fav-search', JSON.stringify(favSearchStatus));
+  });
   function handleOpenHamburger() {
     setHamburgerVisibility(true);
   }
