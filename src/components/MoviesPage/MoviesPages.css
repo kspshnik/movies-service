@@ -26,3 +26,9 @@
 
   color: #FFFFFF;
   }
+
+@media screen and (min-width: 768px) {
+  .movies-list__more {
+    width: 320px;
+    }
+  }
