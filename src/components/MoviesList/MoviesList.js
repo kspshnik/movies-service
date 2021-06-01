@@ -4,17 +4,23 @@ import PropTypes from 'prop-types';
 import './MoviesList.css';
 
 const MoviesList = ({
-  component: Component, allMovies, columns, onMovieLike, onMovieDislike, isFavouritesList,
+  component: Component,
+  allMovies,
+  favourities,
+  columns,
+  onMovieLike,
+  onMovieDislike,
+  isFavouritesList,
 }) => {
   const rows = (columns > 1) ? 4 : 5;
-
   const movies = isFavouritesList ? allMovies : allMovies.slice(0, (rows * columns) - 1);
   return (
     <ul className='movies'>
       {movies.map((movie) => (
         <Component
-          key={movie.movieId}
+          key={movie.id}
           movie={movie}
+          isFavourite={isFavouritesList || favourities.includes(movie.id)}
           onMovieLike={onMovieLike}
           onMovieDislike={isFavouritesList && onMovieDislike} />
       ))}
@@ -38,6 +44,7 @@ MoviesList.propTypes = {
     nameRU: PropTypes.string.isRequired,
     nameEM: PropTypes.string,
   })).isRequired,
+  favourities: PropTypes.array.isRequired,
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,

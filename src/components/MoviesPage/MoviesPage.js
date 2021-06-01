@@ -8,7 +8,8 @@ import { Movie } from '../Movie/Movie';
 import './MoviesPages.css';
 
 function MoviesPage({
-  moviesFound,
+  allMovies,
+  favourities,
   columns,
   onMovieLike,
   onMovieDislike,
@@ -21,7 +22,6 @@ function MoviesPage({
   function triggerShortFilms() {
     setShortMoviesState(() => !isShortMovies);
   }
-
   return (
     <main className='movies-list'>
       <SearchBar
@@ -31,7 +31,8 @@ function MoviesPage({
         onClickRadio={triggerShortFilms} />
       <MoviesList
         component={Movie}
-        allMovies={moviesFound}
+        allMovies={allMovies}
+        favourities={favourities}
         columns={columns}
         onMovieLike={onMovieLike}
         onMovieDislike={onMovieDislike} />
@@ -40,7 +41,7 @@ function MoviesPage({
 }
 
 MoviesPage.propTypes = {
-  moviesFound: PropTypes.arrayOf(PropTypes.shape({
+  allMovies: PropTypes.arrayOf(PropTypes.shape({
     country: PropTypes.string,
     year: PropTypes.string,
     duration: PropTypes.string.isRequired,
@@ -54,6 +55,7 @@ MoviesPage.propTypes = {
     nameRU: PropTypes.string.isRequired,
     nameEM: PropTypes.string,
   })).isRequired,
+  favourities: PropTypes.array.isRequired,
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,

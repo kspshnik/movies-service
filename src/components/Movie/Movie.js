@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import getMovieDuration from '../../helpers/getMovieDuration';
+
 import './Movie.css';
 
 const MovieLikeButton = ({ isLiked, onLike, onDislike }) => (
@@ -11,28 +13,26 @@ const MovieDeleteButton = ({ onMovieDislike }) => (
   <button className='movie__delete' onClick={onMovieDislike} type='button'>+</button>
 );
 
-export function Movie({ movie, onMovieLike, onMovieDislike }) {
+export function Movie({
+  movie, isFavourite, onMovieLike, onMovieDislike,
+}) {
   const {
-    duration, thumbnail, nameRU, owner, description,
+    duration, image, nameRU,
   } = movie;
 
-  const getDuration = (movieDuration) => {
-    const mins = parseInt(movieDuration, 10);
-    return `${Math.floor(mins / 60)}:${(mins % 60)}`;
-  };
-  const currentUserId = '84848';
+  const thumbnail = `https://api.nomoreparties.co${image.url}`;
   return (
     <li className='movie'>
-      <img className='movie__thumbnail' src={thumbnail} alt={description} />
+      <img className='movie__thumbnail' src={thumbnail} alt={nameRU} />
       <div className='movie__container'>
         <div className='movie__info'>
           <p className='movie__name'>{nameRU}</p>
           <MovieLikeButton
-            isLiked={owner === currentUserId}
+            isLiked={isFavourite}
             onLike={onMovieLike}
             onDislike={onMovieDislike} />
         </div>
-        <p className='movie__duration'>{getDuration(duration)}</p>
+        <p className='movie__duration'>{getMovieDuration(duration)}</p>
       </div>
     </li>
   );
@@ -40,23 +40,20 @@ export function Movie({ movie, onMovieLike, onMovieDislike }) {
 
 export function FavMovie({ movie, onMovieDislike }) {
   const {
-    duration, thumbnail, nameRU, owner, description,
+    duration, image, nameRU,
   } = movie;
 
-  const getDuration = (movieDuration) => {
-    const mins = parseInt(movieDuration, 10);
-    return `${Math.floor(mins / 60)}:${(mins % 60)}`;
-  };
-  const currentUserId = '84848';
+  const thumbnail = `https://api.nomoreparties.co${image.url}`;
+
   return (
     <li className='movie'>
-      <img className='movie__thumbnail' src={thumbnail} alt={description} />
+      <img className='movie__thumbnail' src={thumbnail} alt={nameRU} />
       <div className='movie__container'>
         <div className='movie__info'>
           <p className='movie__name'>{nameRU}</p>
-          <MovieDeleteButton isLiked={owner === currentUserId} onMovieDislike={onMovieDislike} />
+          <MovieDeleteButton isLiked onMovieDislike={onMovieDislike} />
         </div>
-        <p className='movie__duration'>{getDuration(duration)}</p>
+        <p className='movie__duration'>{getMovieDuration(duration)}</p>
       </div>
     </li>
   );
@@ -87,6 +84,7 @@ Movie.propTypes = {
     nameRU: PropTypes.string.isRequired,
     nameEM: PropTypes.string,
   }).isRequired,
+  isFavourite: PropTypes.bool.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
 };
