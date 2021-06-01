@@ -22,9 +22,9 @@ function App() {
   const [columnsCount, setColumnsCount] = useState(getMoviesCount());
   // const [isLoggedIn, setLoggedIn] = useState(false);
   const [isHamburgerOpen, setHamburgerVisibility] = useState(false);
-
+  //  const [favMovies, setFavMovies] = useState([]);
   const isLoggedIn = false;
-  const favourities = [10, 11, 12, 13, 14, 15, 16, 17, 18];
+  const [favourities, setFavorities] = useState([2, 3, 7]);
   const mockAllMovies = [
     {
       id: 1,
@@ -514,440 +514,6 @@ function App() {
       },
     }];
 
-  const mockFavMovies = [{
-    id: 10,
-    nameRU: ' Hit So Hard: Школа жизни Патти Шемель',
-    nameEN: 'Hit So Hard: The Life & Near Death Story of Patty Schemel',
-    director: 'П.Дэвид Эберсол',
-    country: 'США',
-    year: '2011',
-    duration: 103,
-    description: 'Это история о тех, кто выжил в 90-е, рассказанная от первого лица: Патти Шемель, барабанщица «золотого» состава группы Hole, открытая лесбиянка и подруга Курта Кобейна, сняла более сорока часов видео на 8-миллиметровую пленку еще в самом начале девяностых. Кобейн, держащий на руках дочь, Кортни Лав, бренчащая что-то на гитаре, сама Патти, зачитывающая в слух итоговой номер Rolling Stone за 94-й год — все это легло в основу Hit So Hard, в котором Дэвид Эбесол реконструирует историю всего беспробудного, безнадежного и до сих пор притягательного поколения 90-х',
-    trailerLink: 'https://www.youtube.com/watch?v=DMvFMeaGj_w',
-    created_at: '2020-12-02T21:02:28.791Z',
-    updated_at: '2020-12-02T21:02:28.791Z',
-    image: {
-      id: 10,
-      name: 'images',
-      alternativeText: '',
-      caption: '',
-      width: 300,
-      height: 168,
-      formats: {
-        thumbnail: {
-          hash: 'thumbnail_images_244e1fd56f',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 245,
-          height: 137,
-          size: 11.76,
-          path: null,
-          url: '/uploads/thumbnail_images_244e1fd56f.jpeg',
-        },
-      },
-      hash: 'images_244e1fd56f',
-      ext: '.jpeg',
-      mime: 'image/jpeg',
-      size: 14.8,
-      url: '/uploads/images_244e1fd56f.jpeg',
-      previewUrl: null,
-      provider: 'local',
-      provider_metadata: null,
-      created_at: '2020-12-02T21:01:43.016Z',
-      updated_at: '2020-12-02T21:01:43.016Z',
-    },
-  },
-  {
-    id: 11,
-    nameRU: ' Баллада о Дженезисе и Леди Джей',
-    nameEN: 'The Ballad of Genesis and Lady Jaye',
-    director: 'Мари Лозье',
-    country: 'США, Германия, Великобритания, Нидерланды, Бельгия, Франция',
-    year: '2011',
-    duration: 65,
-    description: 'Невероятная история любви Дженезиса Пи-Орриджа и его жены Леди Джей, вместе с ним игравшей в группе Psychic TV, — история, которая вряд ли сообщает что-то новое о природе индастриала, но определенно — о природе человека вообще и о природе Пи-Орриджа в частности. Нью-йоркская художница французского происхождения Мари Лозье задумала и начала снимать этот фильм семь лет тому назад — ходила в гости в их квартиру в Нью-Йорке, снимала Дженезиса, стоящего за плитой, и Джей с пучками петрушки и котом на шестнадцатимиллиметровую камеру, одевала их в дурацкие костюмы, ездила с Psychic TV в тур и следила за тем, как любовь заставляет человека отказаться от собственной личности, раствориться в другом человеке и стать одним целым с возлюбленным, используя метод сut-up Уилльяма Берроуза; когда Леди Джей умерла в 2007 году, Дженезис сделал ее татуировку почти во всю руку и до сих пор говорит «мы» вместо «я».',
-    trailerLink: 'https://www.youtube.com/watch?v=d8BX2FDrogo',
-    created_at: '2020-12-02T21:06:17.722Z',
-    updated_at: '2020-12-02T21:06:17.722Z',
-    image: {
-      id: 11,
-      name: 'ballad-of-genesis-and-lady-jaye',
-      alternativeText: '',
-      caption: '',
-      width: 650,
-      height: 300,
-      formats: {
-        thumbnail: {
-          hash: 'thumbnail_ballad_of_genesis_and_lady_jaye_10c27afa96',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 245,
-          height: 113,
-          size: 9.42,
-          path: null,
-          url: '/uploads/thumbnail_ballad_of_genesis_and_lady_jaye_10c27afa96.jpeg',
-        },
-        small: {
-          hash: 'small_ballad_of_genesis_and_lady_jaye_10c27afa96',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 500,
-          height: 231,
-          size: 29.37,
-          path: null,
-          url: '/uploads/small_ballad_of_genesis_and_lady_jaye_10c27afa96.jpeg',
-        },
-      },
-      hash: 'ballad_of_genesis_and_lady_jaye_10c27afa96',
-      ext: '.jpeg',
-      mime: 'image/jpeg',
-      size: 43.95,
-      url: '/uploads/ballad_of_genesis_and_lady_jaye_10c27afa96.jpeg',
-      previewUrl: null,
-      provider: 'local',
-      provider_metadata: null,
-      created_at: '2020-12-02T21:03:33.524Z',
-      updated_at: '2020-12-02T21:03:33.524Z',
-    },
-  },
-  {
-    id: 12,
-    nameRU: 'Виллалобос',
-    nameEN: 'Villalobos',
-    director: 'Ромуальд Кармакар',
-    country: 'Германия',
-    year: '2009',
-    duration: 110,
-    description: 'Последний фильм трилогии, опус магнум Ромуальда Кармакара, премьера которого состоялась в основной программе Венецианского кинофестиваля. Рикардо Виллалобос предстает здесь не столько как один самых востребованных диджеев, сколько как визионер от мира современной музыки. Кармакар исследует не феномен популярности Виллалобоса, а то, как устроена его голова, что творится в его аппаратуре, когда он сводит один трек с другим, как рождается музыка и какое отношение тек-хаус имеет к Мусоргскому.',
-    trailerLink: 'https://www.kinopoisk.ru/film/586534/video/56500/',
-    created_at: '2020-12-02T21:08:46.397Z',
-    updated_at: '2020-12-02T21:08:46.397Z',
-    image: {
-      id: 12,
-      name: '590x400',
-      alternativeText: '',
-      caption: '',
-      width: 590,
-      height: 400,
-      formats: {
-        thumbnail: {
-          hash: 'thumbnail_590x400_2eccd40a93',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 230,
-          height: 156,
-          size: 5.11,
-          path: null,
-          url: '/uploads/thumbnail_590x400_2eccd40a93.jpeg',
-        },
-        small: {
-          hash: 'small_590x400_2eccd40a93',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 500,
-          height: 339,
-          size: 16.78,
-          path: null,
-          url: '/uploads/small_590x400_2eccd40a93.jpeg',
-        },
-      },
-      hash: '590x400_2eccd40a93',
-      ext: '.jpeg',
-      mime: 'image/jpeg',
-      size: 20.9,
-      url: '/uploads/590x400_2eccd40a93.jpeg',
-      previewUrl: null,
-      provider: 'local',
-      provider_metadata: null,
-      created_at: '2020-12-02T21:08:31.457Z',
-      updated_at: '2020-12-02T21:08:31.457Z',
-    },
-  },
-  {
-    id: 13,
-    nameRU: 'Между дьяволом и глубоким синим морем',
-    nameEN: 'Between the Devil and Wide Blue Sea',
-    director: 'Ромуальд Кармакар',
-    country: 'Германия',
-    year: '2005',
-    duration: 89,
-    description: 'Удивительная одиссея, проливающая свет на европейскую электронную сцену нулевых.\nМузыка здесь говорит сама за себя — в фильме нет ни единого интервью, только построенные на длинных планах съемки живых выступлений на самых разных площадках, от клуба Cocoon на Ибице до тесных лондонских залов. В камеру попадают как мало-мальски известные фигуры — T.Raumschmiere, Alter Ego, Captain Comatose, так и менее очевидные люди. Впрочем, главное здесь вовсе не имена, а точно переданное ощущение сопричастности всему происходящему с этой сценой. Фильм был показан на многих международных кинофестивалях, таких как фестиваль в Локарно и фестиваль Sonar, и стал лучшим немецким документальным фильмом 2005-го года по версии канала ARTE.\n',
-    trailerLink: 'https://youtu.be/qUmIgNwRCP4',
-    created_at: '2020-12-02T21:10:47.164Z',
-    updated_at: '2020-12-02T21:10:47.164Z',
-    image: {
-      id: 13,
-      name: '8647b36126befd6051c83ae66339d7f71ecbaa0d',
-      alternativeText: '',
-      caption: '',
-      width: 700,
-      height: 394,
-      formats: {
-        thumbnail: {
-          hash: 'thumbnail_8647b36126befd6051c83ae66339d7f71ecbaa0d_752489df96',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 245,
-          height: 138,
-          size: 4.8,
-          path: null,
-          url: '/uploads/thumbnail_8647b36126befd6051c83ae66339d7f71ecbaa0d_752489df96.jpeg',
-        },
-        small: {
-          hash: 'small_8647b36126befd6051c83ae66339d7f71ecbaa0d_752489df96',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 500,
-          height: 281,
-          size: 13.14,
-          path: null,
-          url: '/uploads/small_8647b36126befd6051c83ae66339d7f71ecbaa0d_752489df96.jpeg',
-        },
-      },
-      hash: '8647b36126befd6051c83ae66339d7f71ecbaa0d_752489df96',
-      ext: '.jpeg',
-      mime: 'image/jpeg',
-      size: 21.83,
-      url: '/uploads/8647b36126befd6051c83ae66339d7f71ecbaa0d_752489df96.jpeg',
-      previewUrl: null,
-      provider: 'local',
-      provider_metadata: null,
-      created_at: '2020-12-02T21:09:50.052Z',
-      updated_at: '2020-12-02T21:09:50.052Z',
-    },
-  },
-  {
-    id: 14,
-    nameRU: 'Ритмы свободы',
-    nameEN: 'Beats of Freedom',
-    director: 'Войцек Слота, Лешек Гноиньски',
-    country: 'Польша',
-    year: '2010',
-    duration: 73,
-    description: 'Формально фильм с подзаголовком «Как сломить тоталитарный режим при помощи самодельного усилителя» — экскурсия по почти неизвестной у нас польской рок-музыке периода от начала 60-х и до падения Восточного блока, на самом же деле — мощнейший, страшно увлекательный (даром что частично основан на недавно рассекреченных материалах спецслужб) портрет эпохи на фоне истории страны, когда один только концерт The Rolling Stones в Варшаве в 67-м году ставил под угрозу всю деятельность советской пропаганды. Выясняется масса интересных подробностей, например, что Дворец культуры и науки, сталинская высотка в самом центре Варшавы, «подарок Советского союза польскому народу», являлся звукозаписывающей студией для одной из самых антикоммунистических польских рок-групп. Но главное открытие — это, собственно, музыка: в большинстве своем дико современная и ничуть не уступающая каким-нибудь крайне актуальным сейчас архивным группам вроде Orchestral Manoeuvres in the Dark.',
-    trailerLink: 'https://www.youtube.com/watch?v=VvKWRtF3eNY',
-    created_at: '2020-12-02T21:13:10.979Z',
-    updated_at: '2020-12-02T21:13:10.979Z',
-    image: {
-      id: 14,
-      name: '1',
-      alternativeText: '',
-      caption: '',
-      width: 790,
-      height: 445,
-      formats: {
-        thumbnail: {
-          hash: 'thumbnail_1_6a9e0669ca',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 245,
-          height: 138,
-          size: 7.44,
-          path: null,
-          url: '/uploads/thumbnail_1_6a9e0669ca.jpeg',
-        },
-        medium: {
-          hash: 'medium_1_6a9e0669ca',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 750,
-          height: 422,
-          size: 37.25,
-          path: null,
-          url: '/uploads/medium_1_6a9e0669ca.jpeg',
-        },
-        small: {
-          hash: 'small_1_6a9e0669ca',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 500,
-          height: 282,
-          size: 21.67,
-          path: null,
-          url: '/uploads/small_1_6a9e0669ca.jpeg',
-        },
-      },
-      hash: '1_6a9e0669ca',
-      ext: '.jpeg',
-      mime: 'image/jpeg',
-      size: 30.8,
-      url: '/uploads/1_6a9e0669ca.jpeg',
-      previewUrl: null,
-      provider: 'local',
-      provider_metadata: null,
-      created_at: '2020-12-02T21:13:01.450Z',
-      updated_at: '2020-12-02T21:13:01.450Z',
-    },
-  },
-  {
-    id: 15,
-    nameRU: 'Сепарадо!',
-    nameEN: 'Separado!',
-    director: 'Дилан Гош, Графф Рис',
-    country: 'Великобритания',
-    year: '2010',
-    duration: 84,
-    description: 'Графф Рис, вокалист психоделической британской группы Super Furry Animals, отправляется в Патагонию, чтобы найти своего дальнего, таинственно исчезнувшего родственника, тоже музыканта. В процессе поисков он охотно прибегает к магическим свойствам шлема Пауэр Рейнджера, путешествует на крыше своего автомобиля и устраивает концерты в чистом поле для диких лошадей. Отчасти документальный фильм, отчасти остроумная выдумка, по жанру более всего напоминающая роуд-муви, «Сепарадо!» – это, прежде всего, история о том, что собственные корни иногда следует искать в собственном же воображении. Что, конечно, не мешает Рису колесить по Южной Америке, знакомиться, кажется, со всеми примечательными местными жителями на своем пути и походя устраивать увлекательнейший ликбез не только по лоу-фай электронике, но и по местной истории.',
-    trailerLink: 'https://www.youtube.com/watch?v=r2IfD-6iS3Y',
-    created_at: '2020-12-02T21:14:58.142Z',
-    updated_at: '2020-12-02T21:14:58.142Z',
-    image: {
-      id: 15,
-      name: 'загруженное',
-      alternativeText: '',
-      caption: '',
-      width: 259,
-      height: 194,
-      formats: {
-        thumbnail: {
-          hash: 'thumbnail_zagruzhennoe_cba9c9f900',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 208,
-          height: 156,
-          size: 11.75,
-          path: null,
-          url: '/uploads/thumbnail_zagruzhennoe_cba9c9f900.jpeg',
-        },
-      },
-      hash: 'zagruzhennoe_cba9c9f900',
-      ext: '.jpeg',
-      mime: 'image/jpeg',
-      size: 16.4,
-      url: '/uploads/zagruzhennoe_cba9c9f900.jpeg',
-      previewUrl: null,
-      provider: 'local',
-      provider_metadata: null,
-      created_at: '2020-12-02T21:14:13.176Z',
-      updated_at: '2020-12-02T21:14:13.176Z',
-    },
-  },
-  {
-    id: 16,
-    nameRU: ' С ног на голову: История Creation records',
-    nameEN: 'Upside Down: The Creation Records Story',
-    director: "Дэнни О'Коннор",
-    country: 'Великобритания',
-    year: '2010',
-    duration: 101,
-    description: 'История Creation Records – самого влиятельного британского лейбла конца прошло века – это во многом история его бессменного отца-основателя Алана МакГи, чья бизнес-стратегия всегда выстраивалась в зависимости от того, что он употреблял наканун. Однако, именно благодаря ему мировая общественность узнала о существовании таких групп как Primal Scream, My Bloody Valentine и Oasis. Последних МакГи нашел в пабе, где группа давала второй в своей жизни концерт, по чистой случайности, попросту опоздав на поезд, Впрочем, его политика отбора всегда носила пристрастный характер, с Бобби Гилеспи он, например, познакомился еще в школе. Фильм ностальгически оглядывается на Британию 90-х, когда ее вкусами правили гении и аутсайдеры, талантливые сумасброды и жадные до приключений авантюристы всех мастей.',
-    trailerLink: 'https://www.youtube.com/watch?v=b3kA_8NrinA',
-    created_at: '2020-12-02T21:17:32.028Z',
-    updated_at: '2020-12-02T21:17:32.028Z',
-    image: {
-      id: 16,
-      name: 'b452eefcd7d441e79b2f5ae291b7',
-      alternativeText: '',
-      caption: '',
-      width: 1425,
-      height: 712,
-      formats: {
-        thumbnail: {
-          hash: 'thumbnail_b452eefcd7d441e79b2f5ae291b7_2c0c62fa89',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 245,
-          height: 122,
-          size: 5.54,
-          path: null,
-          url: '/uploads/thumbnail_b452eefcd7d441e79b2f5ae291b7_2c0c62fa89.jpeg',
-        },
-        large: {
-          hash: 'large_b452eefcd7d441e79b2f5ae291b7_2c0c62fa89',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 1000,
-          height: 500,
-          size: 53.78,
-          path: null,
-          url: '/uploads/large_b452eefcd7d441e79b2f5ae291b7_2c0c62fa89.jpeg',
-        },
-        medium: {
-          hash: 'medium_b452eefcd7d441e79b2f5ae291b7_2c0c62fa89',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 750,
-          height: 375,
-          size: 33.78,
-          path: null,
-          url: '/uploads/medium_b452eefcd7d441e79b2f5ae291b7_2c0c62fa89.jpeg',
-        },
-        small: {
-          hash: 'small_b452eefcd7d441e79b2f5ae291b7_2c0c62fa89',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 500,
-          height: 250,
-          size: 17.5,
-          path: null,
-          url: '/uploads/small_b452eefcd7d441e79b2f5ae291b7_2c0c62fa89.jpeg',
-        },
-      },
-      hash: 'b452eefcd7d441e79b2f5ae291b7_2c0c62fa89',
-      ext: '.jpeg',
-      mime: 'image/jpeg',
-      size: 83.6,
-      url: '/uploads/b452eefcd7d441e79b2f5ae291b7_2c0c62fa89.jpeg',
-      previewUrl: null,
-      provider: 'local',
-      provider_metadata: null,
-      created_at: '2020-12-02T21:16:16.072Z',
-      updated_at: '2020-12-02T21:16:16.072Z',
-    },
-  },
-  {
-    id: 17,
-    nameRU: 'Я всё ещё здесь',
-    nameEN: 'I’m Still Here',
-    director: 'Кейси Аффлек',
-    country: 'США',
-    year: '2010',
-    duration: 108,
-    description: 'Режиссерский дебют Кейси Аффлека — фильм о том, как актер Хоакин Феникс, номинированный на премию «Оскар» за роль Джонни Кэша в фильме «Переступить черту», решает бросить актерскую карьеру и начинает читать рэп, больно наступая, кажется, на все возможные грабли и в конечном счете удаляясь в неизвестном направлении по пояс в воде. Ну а то обстоятельство, что впоследствии Кейси Аффлека изобличили в том, что большая часть съемок была постановочной, если о чем и свидетельствует, то только о том, что Хоакин Феникс блистательным образом играет себя самого.',
-    trailerLink: 'https://www.youtube.com/watch?v=cDwdYsOeSXw',
-    created_at: '2020-12-02T21:19:02.529Z',
-    updated_at: '2020-12-02T21:19:02.529Z',
-    image: {
-      id: 17,
-      name: '280x178_2',
-      alternativeText: '',
-      caption: '',
-      width: 560,
-      height: 356,
-      formats: {
-        thumbnail: {
-          hash: 'thumbnail_280x178_2_f2eee77cae',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 245,
-          height: 156,
-          size: 4.59,
-          path: null,
-          url: '/uploads/thumbnail_280x178_2_f2eee77cae.jpeg',
-        },
-        small: {
-          hash: 'small_280x178_2_f2eee77cae',
-          ext: '.jpeg',
-          mime: 'image/jpeg',
-          width: 500,
-          height: 318,
-          size: 16.39,
-          path: null,
-          url: '/uploads/small_280x178_2_f2eee77cae.jpeg',
-        },
-      },
-      hash: '280x178_2_f2eee77cae',
-      ext: '.jpeg',
-      mime: 'image/jpeg',
-      size: 20.54,
-      url: '/uploads/280x178_2_f2eee77cae.jpeg',
-      previewUrl: null,
-      provider: 'local',
-      provider_metadata: null,
-      created_at: '2020-12-02T21:18:53.210Z',
-      updated_at: '2020-12-02T21:18:53.210Z',
-    },
-  }];
   useEffect(() => {
     const setColumns = () => {
       setColumnsCount(getMoviesCount());
@@ -956,11 +522,22 @@ function App() {
     return () => window.removeEventListener('resize', setColumns);
   }, []);
 
+  // useEffect(() => { setFavMovies(mockAllMovies.filter(({ id }) => favourities.includes(id))); },
+  //  [mockAllMovies, favourities]);
+
   function handleOpenHamburger() {
     setHamburgerVisibility(true);
   }
   function handleCloseHamburger() {
     setHamburgerVisibility(false);
+  }
+
+  function handleMovieLike(id) {
+    setFavorities([...favourities, id]);
+  }
+
+  function handleMovieDislike(id) {
+    setFavorities(() => favourities.filter((movie) => movie !== id));
   }
 
   const stubLogic = () => null;
@@ -979,18 +556,18 @@ function App() {
               allMovies={mockAllMovies}
               favourities={favourities}
               columns={columnsCount}
-              onMovieDislike={stubLogic}
-              onMovieLike={stubLogic} />
+              onMovieDislike={handleMovieDislike}
+              onMovieLike={handleMovieLike} />
           </ErrorBoundary>
         </Route>
 
         <Route path='/saved-films'>
           <ErrorBoundary>
             <FavouriteMoviesPage
-              favouriteMovies={mockFavMovies}
+              favouriteMovies={mockAllMovies.filter(({ id }) => favourities.includes(id))}
               columns={columnsCount}
-              onMovieDislike={stubLogic}
-              onMovieLike={stubLogic} />
+              onMovieDislike={handleMovieDislike}
+              onMovieLike={handleMovieLike} />
           </ErrorBoundary>
         </Route>
         <Route path='/profile'>

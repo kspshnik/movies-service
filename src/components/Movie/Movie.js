@@ -5,8 +5,11 @@ import getMovieDuration from '../../helpers/getMovieDuration';
 
 import './Movie.css';
 
-const MovieLikeButton = ({ isLiked, onLike, onDislike }) => (
-  <button className={isLiked ? 'movie__like movie__like_active' : 'movie__like'} onClick={isLiked ? onDislike : onLike} type='button' />
+const MovieLikeButton = ({ isLiked, onClick }) => (
+  <button
+    className={isLiked ? 'movie__like movie__like_active' : 'movie__like'}
+    onClick={onClick}
+    type='button' />
 );
 
 const MovieDeleteButton = ({ onMovieDislike }) => (
@@ -17,13 +20,22 @@ export function Movie({
   movie, isFavourite, onMovieLike, onMovieDislike,
 }) {
   const {
-    duration, image, nameRU, trailerLink,
+    id, duration, image, nameRU, trailerLink,
   } = movie;
 
   const thumbnail = `https://api.nomoreparties.co${image.url}`;
   const thumbnailAlt = (image.alternativeText.length > 0)
     ? image.alternativeText.length
     : image.name;
+
+  function onLikeClick() {
+    if (isFavourite) {
+      onMovieDislike(id);
+    } else {
+      onMovieLike(id);
+    }
+  }
+
   return (
     <li className='movie'>
       <a target='_blank' href={trailerLink} rel='noreferrer'>
@@ -34,8 +46,7 @@ export function Movie({
           <p className='movie__name'>{nameRU}</p>
           <MovieLikeButton
             isLiked={isFavourite}
-            onLike={onMovieLike}
-            onDislike={onMovieDislike} />
+            onClick={onLikeClick} />
         </div>
         <p className='movie__duration'>{getMovieDuration(duration)}</p>
       </div>
@@ -45,11 +56,13 @@ export function Movie({
 
 export function FavMovie({ movie, onMovieDislike }) {
   const {
-    duration, image, nameRU, trailerLink,
+    id, duration, image, nameRU, trailerLink,
   } = movie;
 
   const thumbnail = `https://api.nomoreparties.co${image.url}`;
-
+  function handleDislikeClick() {
+    onMovieDislike(id);
+  }
   return (
     <li className='movie'>
       <a target='_blank' href={trailerLink} rel='noreferrer'>
@@ -58,7 +71,7 @@ export function FavMovie({ movie, onMovieDislike }) {
       <div className='movie__container'>
         <div className='movie__info'>
           <p className='movie__name'>{nameRU}</p>
-          <MovieDeleteButton isLiked onMovieDislike={onMovieDislike} />
+          <MovieDeleteButton isLiked onMovieDislike={handleDislikeClick} />
         </div>
         <p className='movie__duration'>{getMovieDuration(duration)}</p>
       </div>
@@ -68,8 +81,7 @@ export function FavMovie({ movie, onMovieDislike }) {
 
 MovieLikeButton.propTypes = {
   isLiked: PropTypes.bool.isRequired,
-  onLike: PropTypes.func.isRequired,
-  onDislike: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 MovieDeleteButton.propTypes = {
