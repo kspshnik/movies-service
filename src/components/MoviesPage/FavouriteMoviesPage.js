@@ -6,6 +6,7 @@ import MoviesList from '../MoviesList/MoviesList';
 import { FavMovie } from '../Movie/Movie';
 
 import './MoviesPages.css';
+import searchMovies from '../../helpers/searchMovies';
 
 const FavouriteMoviesPage = ({
   favouriteMovies,
@@ -13,34 +14,35 @@ const FavouriteMoviesPage = ({
   onMovieDislike,
   columns,
 }) => {
+  const [foundMovies, setFoundMovies] = useState([]);
   const [search, setSearch] = useState('');
   const [isShort, setShort] = useState(false);
-  // const [isPreparingMovies, setPreparingMoviesState] = useState(false);
 
   useEffect(() => {
-    setSearch(localStorage.getItem('all-search') || '');
-    setShort(Boolean(localStorage.getItem('all-short')) || false);
+    if ('fav-search' in localStorage) {
+      console.log('get fav-search');
+      setSearch(localStorage.getItem('fav-search'));
+    }
+    if ('fav-short' in localStorage) {
+      setShort(localStorage.getItem('fav-short') === 'true');
+    }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('all-search', search);
-  }, [search]);
-  useEffect(() => {
-    localStorage.setItem('all-search', String(isShort));
-  }, [isShort]);
-
   function triggerShortFilms() {
-    setShort(() => !isShort);
+    const newShort = !isShort;
+    setShort(() => newShort);
+    localStorage.setItem('fav-short', String(newShort));
   }
 
   function handleSearchSubmit(term) {
     setSearch(term);
-    console.log(`Новый поиск: '${search}'.`);
+    localStorage.setItem('fav-search', term);
   }
-
   useEffect(() => {
-    console.log(`Новые параметры поиска.\nСтрока поиска : '${search}',\nКороткометражки : ${isShort ? 'Да' : 'Нет'}.`);
-  }, [search, isShort]);
+    if (search.length > 0 || isShort) {
+      setFoundMovies(searchMovies(favouriteMovies, search, isShort));
+    }
+  }, [search, isShort, favouriteMovies]);
 
   return (
     <main className='movies-list movies-list_favourites'>
@@ -51,7 +53,7 @@ const FavouriteMoviesPage = ({
         onClickRadio={triggerShortFilms} />
       <MoviesList
         component={FavMovie}
-        allMovies={favouriteMovies}
+        movies={foundMovies}
         favourities={[]}
         columns={columns}
         onMovieLike={onMovieLike}
@@ -65,7 +67,7 @@ FavouriteMoviesPage.propTypes = {
   favouriteMovies: PropTypes.arrayOf(PropTypes.shape({
     country: PropTypes.string,
     year: PropTypes.string,
-    duration: PropTypes.string.isRequired,
+    duration: PropTypes.number.isRequired,
     director: PropTypes.string,
     description: PropTypes.string.isRequired,
     image: PropTypes.string,

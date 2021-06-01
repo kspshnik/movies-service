@@ -31,7 +31,7 @@ function MoviesPage({
       setSearch(localStorage.getItem('all-search'));
     }
     if ('all-short' in localStorage) {
-      setShort(Boolean(localStorage.getItem('all-short')));
+      setShort(localStorage.getItem('all-short') === 'true');
     }
   }, []);
 
@@ -48,15 +48,12 @@ function MoviesPage({
   }
 
   function handleSearchSubmit(term) {
-    console.log(`Получен новый поиск из SearchBar: '${term}'!`);
     setSearch(term);
   }
 
   useEffect(() => {
     if (search.length > 0 || isShort) {
-      const tmp = searchMovies(allMovies, search, isShort);
-      console.dir(tmp);
-      setFoundMovies(tmp);
+      setFoundMovies(searchMovies(allMovies, search, isShort));
     }
   }, [search, isShort, allMovies]);
 
@@ -84,7 +81,7 @@ MoviesPage.propTypes = {
   allMovies: PropTypes.arrayOf(PropTypes.shape({
     country: PropTypes.string,
     year: PropTypes.string,
-    duration: PropTypes.string.isRequired,
+    duration: PropTypes.number.isRequired,
     director: PropTypes.string,
     description: PropTypes.string.isRequired,
     image: PropTypes.object,
