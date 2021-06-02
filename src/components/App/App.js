@@ -14,6 +14,8 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import LandingPage from '../LandingPage/LandingPage';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
+import { getBeatFilms } from '../../helpers/api';
+
 function App() {
   const getMoviesCount = () => {
     const rootElement = document.documentElement;
@@ -24,7 +26,13 @@ function App() {
   const [isHamburgerOpen, setHamburgerVisibility] = useState(false);
   //  const [favMovies, setFavMovies] = useState([]);
   const isLoggedIn = false;
+  const [allMovies, setAllMovies] = useState([]);
   const [favourities, setFavorities] = useState([2, 3, 7]);
+
+  const [isReloadRequested, setReloadState] = useState(false);
+
+  const [isBeatFilmsLoading, setBeatFilmsLoadingState] = useState(false);
+
   const mockAllMovies = [
     {
       id: 1,
@@ -524,7 +532,20 @@ function App() {
 
   // useEffect(() => { setFavMovies(mockAllMovies.filter(({ id }) => favourities.includes(id))); },
   //  [mockAllMovies, favourities]);
-
+  async function getAllMovies() {
+    try {
+      setBeatFilmsLoadingState(true);
+      const beatPromise = getBeatFilms();
+      const films = await beatPromise;
+      console.log(typeof films);
+      setAllMovies(films);
+    } catch (error) {
+      console.dir(error);
+    } finally {
+      setBeatFilmsLoadingState(false);
+      setReloadState(false);
+    }
+  }
   function handleOpenHamburger() {
     setHamburgerVisibility(true);
   }
@@ -540,6 +561,15 @@ function App() {
     setFavorities(() => favourities.filter((movie) => movie !== id));
   }
 
+  function handleBeatMoviesRefresh() {
+    setReloadState(true);
+  }
+  useEffect(() => {
+    if (isReloadRequested) {
+      getAllMovies();
+    }
+  }, [isReloadRequested]);
+
   const stubLogic = () => null;
   return (
     <div className='page typo'>
@@ -553,11 +583,13 @@ function App() {
         <Route path='/films'>
           <ErrorBoundary>
             <MoviesPage
-              allMovies={mockAllMovies}
+              allMovies={allMovies}
               favourities={favourities}
               columns={columnsCount}
               onMovieDislike={handleMovieDislike}
-              onMovieLike={handleMovieLike} />
+              onMovieLike={handleMovieLike}
+              isLoading={isBeatFilmsLoading}
+              onRefreshRequest={handleBeatMoviesRefresh} />
           </ErrorBoundary>
         </Route>
 

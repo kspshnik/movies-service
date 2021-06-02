@@ -19,6 +19,7 @@ function MoviesPage({
   isLoading,
   isError,
   errorMessage,
+  onRefreshRequest,
 }) {
   const [search, setSearch] = useState('');
   const [isShort, setShort] = useState(false);
@@ -48,10 +49,12 @@ function MoviesPage({
 
   function triggerShortFilms() {
     setShort(() => !isShort);
+    onRefreshRequest();
   }
 
   function handleSearchSubmit(term) {
     setSearch(term);
+    onRefreshRequest();
   }
 
   useEffect(() => {
@@ -95,6 +98,7 @@ MoviesPage.propTypes = {
   isLoading: PropTypes.bool,
   isError: PropTypes.bool,
   errorMessage: PropTypes.string,
+  onRefreshRequest: PropTypes.func.isRequired,
 };
 
 MoviesPage.defaultProps = {
