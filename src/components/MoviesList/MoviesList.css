@@ -1,0 +1,7 @@
+.movies {
+  display: grid;
+  grid-template-columns: repeat(var(--movies_count), var(--movie-width));
+  gap: var(--movie-gap-v) var(--movie-gap-h);
+  padding: var(--movie-padding-top) 0 0 0;
+  }
+

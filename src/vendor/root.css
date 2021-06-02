@@ -1,0 +1,43 @@
+:root {
+  --movies_count: 1;
+  --movie-width: 300px;
+  --movie-height: 235px;
+  --movie-img-height: 168px;
+  --movie-gap-v: 20px;
+  --movie-gap-h: 0;
+  --movie-padding-top: 50px;
+  --page-width: 320px;
+  --header-height: 74px;
+  --footer-height: 185px;
+  background-color: #202020;
+  }
+
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+ :root {
+   --movies_count: 2;
+   --movie-width: 339px;
+   --movie-height: 257px;
+   --movie-img-height: 190px;
+   --movie-gap-v: 36px;
+   --movie-gap-h: 30px;
+   --movie-padding-top: 80px;
+   --page-width: 768px;
+   --footer-height: 95px;
+
+   }
+  }
+
+
+@media screen and (min-width: 1280px) {
+  :root {
+    --movies_count: 4;
+    --movie-width: 270px;
+    --movie-height: 218px;
+    --movie-img-height: 151px;
+    --movie-gap-v: 32px;
+    --movie-gap-h: 20px;
+    --movie-padding-top: 80px;
+    --page-width: 1280px;
+    --footer-height: 95px;
+    }
+  }

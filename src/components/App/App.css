@@ -1,0 +1,25 @@
+.page {
+  margin: 0 auto;
+  width: var(--page-width);
+  position: relative;
+  padding: 0 10px;
+  box-sizing: border-box;
+  background-color: #202020;
+  }
+
+@media screen and (min-width: 768px) {
+  .page {
+    padding: 0 30px;
+    }
+  }
+
+@media screen and (min-width: 1280px) {
+  .page {
+    padding: 0 70px;
+    }
+  }
+
+.typo {
+  color: #ffffff;
+  font-family: Inter, sans-serif;
+  }
