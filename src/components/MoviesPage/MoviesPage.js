@@ -26,7 +26,7 @@ function MoviesPage({
   const [foundMovies, setFoundMovies] = useState([]);
   const [rows, setRows] = useState((columns > 3) ? 3 : (6 - columns));
 
-  // const [isPreparingMovies, setPreparingMoviesState] = useState(false);
+  // const [isPreloaderShown, setPreloaderState] = useState(false);
   const increaseRows = () => {
     setRows(() => rows + 1);
   };
@@ -48,19 +48,28 @@ function MoviesPage({
   }, [isShort]);
 
   function triggerShortFilms() {
-    setShort(() => !isShort);
-    onRefreshRequest();
+    if (isShort) {
+      //   setPreloaderState(true);
+      onRefreshRequest();
+      setShort(() => !isShort);
+    }
   }
 
   function handleSearchSubmit(term) {
-    setSearch(term);
-    onRefreshRequest();
+    if (search.length > 2) {
+      //   setPreloaderState(true);
+      onRefreshRequest();
+      setSearch(term);
+    }
   }
-
+  // const searchFilms = React.useCallback(() => searchMovies(allMovies, search, isShort),
+  //  [allMovies, search, isShort]);
   useEffect(() => {
     if (search.length > 0 || isShort) {
-      setFoundMovies(searchMovies(allMovies, search, isShort));
+      const newFoundFilms = searchMovies(allMovies, search, isShort);
+      setFoundMovies(newFoundFilms);
     }
+  //  setPreloaderState(false);
   }, [search, isShort, allMovies]);
 
   return (

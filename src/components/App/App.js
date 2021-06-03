@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import './App.css';
 
 import Header from '../Header/Header';
@@ -14,18 +14,24 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import LandingPage from '../LandingPage/LandingPage';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
-import { getBeatFilms } from '../../helpers/api';
+import { getBeatFilms, signIn, signUp } from '../../helpers/api';
+import prepareError from '../../helpers/prepareError';
+import ErrorPopup from '../ErrorPopup/ErrorPopup';
 
 function App() {
+  const history = useHistory();
   const getMoviesCount = () => {
     const rootElement = document.documentElement;
     return parseInt(getComputedStyle(rootElement).getPropertyValue('--movies_count'), 10);
   };
   const [columnsCount, setColumnsCount] = useState(getMoviesCount());
-  // const [isLoggedIn, setLoggedIn] = useState(false);
+  const [jwt, setJWT] = useState('');
+  const [isLoggedIn, setLoggedIn] = useState(false);
   const [isHamburgerOpen, setHamburgerVisibility] = useState(false);
+  const [isErrorTooltipOpen, setErrorTooltipVisibility] = useState(false);
   //  const [favMovies, setFavMovies] = useState([]);
-  const isLoggedIn = false;
+  const [errorObject, setErrorState] = useState({ error: '', errorMessage: '' });
+  // const isLoggedIn = false;
   const [allMovies, setAllMovies] = useState([]);
   const [favourities, setFavorities] = useState([2, 3, 7]);
 
@@ -522,6 +528,11 @@ function App() {
       },
     }];
 
+  const makeErrorObject = (error) => {
+    const { name, message } = error;
+    return { name, message };
+  };
+
   useEffect(() => {
     const setColumns = () => {
       setColumnsCount(getMoviesCount());
@@ -532,6 +543,42 @@ function App() {
 
   // useEffect(() => { setFavMovies(mockAllMovies.filter(({ id }) => favourities.includes(id))); },
   //  [mockAllMovies, favourities]);
+  async function handleSignUp(name, email, password) {
+    try {
+      const signupPromise = signUp(name, email, password);
+      const user = await signupPromise;
+      if (!(user.name && user.email && user.id)) {
+        if (user.message) {
+          throw prepareError('Ошибка получения данных с сервера', user.message);
+        } else {
+          throw prepareError(
+            'Ошибка получения данных с сервера',
+            'Неизвестная ошибка',
+          );
+        }
+      }
+      const signinPromise = await signIn(email, password);
+      const signedInUser = await signinPromise;
+      console.dir(signedInUser);
+      if (!signedInUser.token) {
+        if (signedInUser.message) {
+          throw prepareError('Ошибка получения данных с сервера', signedInUser.message);
+        } else {
+          throw prepareError(
+            'Ошибка получения данных с сервера',
+            'Неизвестная ошибка',
+          );
+        }
+      }
+      localStorage.setItem('movies-jwt', signedInUser.token);
+      setJWT(signedInUser.token);
+      setLoggedIn(true);
+      history.push('/');
+    } catch (error) {
+      setErrorState(makeErrorObject(error));
+      setErrorTooltipVisibility(true);
+    }
+  }
   async function getAllMovies() {
     try {
       setBeatFilmsLoadingState(true);
@@ -552,6 +599,7 @@ function App() {
   function handleCloseHamburger() {
     setHamburgerVisibility(false);
   }
+  function handleErrorTooltipClose() { setErrorTooltipVisibility(false); }
 
   function handleMovieLike(id) {
     setFavorities([...favourities, id]);
@@ -612,7 +660,7 @@ function App() {
         <Route path='/signup'>
           <ErrorBoundary>
             <SignUpPage
-              onSignUpSubmit={stubLogic} />
+              onSignUpSubmit={handleSignUp} />
           </ErrorBoundary>
         </Route>
         <Route path='/signin'>
@@ -639,6 +687,10 @@ function App() {
         isHamburgerOpen={isHamburgerOpen}
         onHamburgerOpen={handleOpenHamburger}
         onHamburgerClose={handleCloseHamburger} />
+      <ErrorPopup
+        onErrorClose={handleErrorTooltipClose}
+        isOpen={isErrorTooltipOpen}
+        errorObject={errorObject} />
     </div>
   );
 }

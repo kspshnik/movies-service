@@ -81,7 +81,7 @@ function SignUpPage({ onSignUpSubmit }) {
    */
   function handleSubmit(event) {
     event.preventDefault();
-    onSignUpSubmit(email, password);
+    onSignUpSubmit(name, email, password);
   }
 
   return (
