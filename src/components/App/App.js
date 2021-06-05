@@ -57,7 +57,8 @@ function App() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isShortMovie, setShortMovie] = useState(false);
-
+  const [favTerm, setFavTerm] = useState('');
+  const [isShortFav, setShortFav] = useState(false);
   const makeErrorObject = (error) => {
     const { name, message } = error;
     return { name, message };
@@ -268,6 +269,11 @@ function App() {
     }
   }
 
+  function handleFavSearchRequest(term, isShort) {
+    setFavTerm(term);
+    setShortFav(isShort);
+  }
+
   useEffect(() => {
     if (allMovies.length > 0) {
       localStorage.setItem('all-movies', JSON.stringify({ age: Date.now(), data: allMovies }));
@@ -289,7 +295,7 @@ function App() {
         setAllMovies(moviesData.data);
       } else {
         localStorage.removeItem('all-movies');
-        setAllMovies('');
+        setAllMovies([]);
       }
     } else {
       setAllMovies([]);
@@ -312,10 +318,43 @@ function App() {
         setShortMovie(shortData.term);
       } else {
         localStorage.removeItem('all-short');
-        setShortMovie('');
+        setShortMovie(false);
       }
     } else {
-      setShortMovie('');
+      setShortMovie(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('fav-search', JSON.stringify({ age: Date.now(), term: favTerm }));
+  }, [favTerm]);
+
+  useEffect(() => {
+    localStorage.setItem('fav-short', JSON.stringify({ age: Date.now(), short: isShortFav }));
+  }, [isShortFav]);
+
+  useEffect(() => {
+    if ('fav-search' in localStorage) {
+      const searchData = JSON.parse(localStorage.getItem('fav-search'));
+      if ((Date.now() - searchData.age) < EXPIRY_TRESHOLD) {
+        setFavTerm(searchData.term);
+      } else {
+        localStorage.removeItem('fav-search');
+        setFavTerm('');
+      }
+    } else {
+      setFavTerm('');
+    }
+    if ('fav-short' in localStorage) {
+      const shortData = JSON.parse(localStorage.getItem('fav-short'));
+      if ((Date.now() - shortData.age) < EXPIRY_TRESHOLD) {
+        setShortFav(shortData.term);
+      } else {
+        localStorage.removeItem('fav-short');
+        setShortFav(false);
+      }
+    } else {
+      setShortFav(false);
     }
   }, []);
 
@@ -413,6 +452,9 @@ function App() {
             columns={columnsCount}
             onMovieDislike={handleMovieDislike}
             onMovieLike={handleMovieLike}
+            term={favTerm}
+            isShort={isShortFav}
+            onSearchSubmit={handleFavSearchRequest}
             isLoadingError={isFavMoviesLoadingError}
             errorObject={favsErrorObject} />
           <ProtectedRoute

@@ -14,62 +14,63 @@ const FavouriteMoviesPage = ({
   onMovieLike,
   onMovieDislike,
   columns,
+  term,
+  isShort,
+  onSearchSubmit,
   isError,
   errorMessage,
 }) => {
   const [foundMovies, setFoundMovies] = useState(favouriteMovies);
-  const [search, setSearch] = useState('');
-  const [isShort, setShort] = useState(false);
+  const [isNotFound, setNotFound] = useState(false);
+  const [noRequest, setSearchState] = useState(true);
 
   const location = useLocation();
   useEffect(() => {
     localStorage.setItem('movies-path', location.pathname);
   });
 
-  useEffect(() => {
-    if ('fav-search' in localStorage) {
-      setSearch(localStorage.getItem('fav-search'));
-    }
-    if ('fav-short' in localStorage) {
-      setShort(localStorage.getItem('fav-short') === 'true');
-    }
-  }, []);
-
   function triggerShortFilms() {
-    const newShort = !isShort;
-    setShort(() => newShort);
-    localStorage.setItem('fav-short', String(newShort));
+    setSearchState(false);
+    onSearchSubmit(term, !isShort);
   }
 
-  function handleSearchSubmit(term) {
-    setSearch(term);
-    localStorage.setItem('fav-search', term);
+  function handleSearchSubmit(keyword) {
+    setSearchState(keyword.length === 0);
+    onSearchSubmit(keyword, isShort);
   }
 
   useEffect(() => {
-    if (foundMovies.length > 0) {
-      localStorage.setItem('fav-found', JSON.stringify(foundMovies));
+    if ((term.length > 0 || isShort) && favouriteMovies && favouriteMovies.length > 0) {
+      setFoundMovies(favouriteMovies.filter((film) => reduceSearch(film, term, isShort)));
+    } else {
+      setSearchState(true);
+      setFoundMovies(favouriteMovies);
     }
-  }, [foundMovies]);
-  useEffect(() => {
-    if ('fav-found' in localStorage) {
-      setFoundMovies(JSON.parse(localStorage.getItem('fav-found')));
-    }
-  }, []);
+  }, [term, isShort, favouriteMovies]);
 
   useEffect(() => {
-    const newfound = favouriteMovies.filter((film) => reduceSearch(film, search, isShort));
-    setFoundMovies(newfound);
-  }, [isShort, search, favouriteMovies]);
+    setNotFound(foundMovies.length === 0);
+  }, [foundMovies.length]);
+
+  const notFoundMessage = (isNotFound && !noRequest)
+    ? `К сожалению, по Вашему запросу "${term}" ${isShort ? 'среди короткометражных фильмов' : ''} ничего не найдено.`
+    : '';
 
   return (
     <main className='movies-list movies-list_favourites'>
       <SearchBar
-        term={search}
+        term={term}
         isFiltering={isShort}
         onSearchSubmit={handleSearchSubmit}
         onClickRadio={triggerShortFilms} />
-      {isError ? <p className='movies-list__error'>{errorMessage}</p>
+      {(isError || isNotFound)
+        ? (
+          <p className='movies-list__error'>
+            {isError
+              ? errorMessage
+              : notFoundMessage}
+          </p>
+        )
         : (
           <MoviesList
             component={FavMovie}
@@ -89,6 +90,9 @@ FavouriteMoviesPage.propTypes = {
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
+  term: PropTypes.string.isRequired,
+  isShort: PropTypes.bool.isRequired,
+  onSearchSubmit: PropTypes.func.isRequired,
   isError: PropTypes.bool,
   errorMessage: PropTypes.string,
 };

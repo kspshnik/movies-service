@@ -65,7 +65,6 @@ export const reduceMoviesToFront = (movies) => movies.map((film) => {
     nameRU, description, director, duration, year, id, trailerLink, image,
   };
 });
-
 export const reduceFavsToFront = (favs) => favs.map((fav) => {
   const {
     country,
@@ -112,11 +111,13 @@ export const reduceSearch = (movie, term, isShort) => {
     nameRU, description, duration,
   } = movie;
 
-  const res = (`${nameRU}  ${description}`
+  return (`${nameRU}  ${description}`
     .replace(',', ' ')
     .replace('.', ' ')
+    .replace(':', ' ')
+    .replace(';', ' ')
+    .replace('-', ' ')
     .split(' ')
     .filter((word) => word.includes(term))
     .length > 0) && (!isShort || (duration < SHORTMOVIE_LIMIT));
-  return res;
 };

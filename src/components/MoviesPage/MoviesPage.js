@@ -54,7 +54,7 @@ function MoviesPage({
   }
 
   useEffect(() => {
-    if (term.length > 0 || isShort) {
+    if ((term.length > 0 || isShort) && allMovies && allMovies.length > 0) {
       setFoundMovies(allMovies.filter((film) => reduceSearch(film, term, isShort)));
     } else {
       setSearchState(true);
