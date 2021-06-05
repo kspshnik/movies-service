@@ -227,7 +227,7 @@ function App() {
   }
 
   function handleSignOut() {
-    localStorage.removeItem('jwt-movies');
+    localStorage.removeItem('movies-jwt');
     if ('movies-path' in localStorage) {
       localStorage.removeItem('movies-path');
     }
