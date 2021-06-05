@@ -11,7 +11,7 @@ const ProtectedRoute = ({
   <Route exact path={pathto}>
     {
         // eslint-disable-next-line react/jsx-props-no-spreading
-        isLoggedIn ? <Component {...props} /> : <Redirect to='./signin' />
+        isLoggedIn ? <Component {...props} /> : <Redirect to='/signin' />
       }
   </Route>
 );

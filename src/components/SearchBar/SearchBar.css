@@ -29,7 +29,13 @@
   color: #ffffff;
   overflow: hidden;
   }
-
+.search__input:active {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  color: #ffffff;
+  overflow: hidden;
+  }
 .search__input::placeholder {
   color: #8B8B8B;
   }
@@ -46,7 +52,9 @@
   width: 80px;
   height: 44px;
   }
-
+.search__button_disabled {
+  opacity: 0.2;
+  }
 .search__shortfilms {
   display: flex;
   flex-flow: row nowrap;

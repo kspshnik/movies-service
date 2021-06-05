@@ -22,7 +22,7 @@ const MoviesList = ({
               <Component
                 key={movie.id}
                 movie={movie}
-                isFavourite={favourities.includes(movie.id)}
+                isFavourite={favourities.includes(String(movie.id))}
                 onMovieLike={onMovieLike}
                 onMovieDislike={onMovieDislike} />
             ))}

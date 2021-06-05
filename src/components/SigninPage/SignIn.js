@@ -120,8 +120,8 @@ function SignInPage({ onSignInSubmit }) {
               className='credentials__submit'
               onClick={handleSubmit}
               disabled={!isFormValid}
-              aria-label='Кнопка регистрации'>
-              Зарегистрироваться
+              aria-label='Кнопка входа'>
+              Войти
             </button>
             <div className='credentials__linkarea'>
               <span className='credentials__question'>Ещё не зарегистрированы? &nbsp;</span>

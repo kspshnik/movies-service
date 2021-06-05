@@ -6,7 +6,7 @@ import MoviesList from '../MoviesList/MoviesList';
 import { FavMovie } from '../Movie/Movie';
 
 import './MoviesPages.css';
-import searchMovies from '../../helpers/searchMovies';
+import { reduceSearch } from '../../helpers/movieReducers';
 
 const FavouriteMoviesPage = ({
   favouriteMovies,
@@ -19,6 +19,11 @@ const FavouriteMoviesPage = ({
   const [foundMovies, setFoundMovies] = useState([]);
   const [search, setSearch] = useState('');
   const [isShort, setShort] = useState(false);
+  const [isJustMounted, setJustMounted] = useState(false);
+
+  useEffect(() => {
+    setJustMounted(true);
+  }, []);
 
   useEffect(() => {
     if ('fav-search' in localStorage) {
@@ -40,10 +45,24 @@ const FavouriteMoviesPage = ({
     localStorage.setItem('fav-search', term);
   }
   useEffect(() => {
+    const processSearch = () => {
+      if (search.length > 0) {
+        const newfound = favouriteMovies.filter((film) => reduceSearch(film, search, isShort));
+        setFoundMovies(newfound);
+      } else if (isShort) {
+        const allShort = favouriteMovies.filter((movie) => movie.duration < 41);
+        setFoundMovies(allShort);
+      } else {
+        setFoundMovies(favouriteMovies);
+      }
+    };
     if (search.length > 0 || isShort) {
-      setFoundMovies(searchMovies(favouriteMovies, search, isShort));
+      processSearch();
+    } else if (isJustMounted) {
+      processSearch();
+      setJustMounted(false);
     }
-  }, [search, isShort, favouriteMovies]);
+  }, [isShort, search, favouriteMovies, isJustMounted]);
 
   return (
     <main className='movies-list movies-list_favourites'>

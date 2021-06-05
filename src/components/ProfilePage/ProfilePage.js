@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-// import currentUserContext from '../../contexts/currentUserContext'
+import currentUserContext from '../../contexts/currentUserContext';
 
 import './ProfilePage.css';
 
 function ProfilePage({ onSubmitProfile, onSignOut }) {
-// const user = useContext(currentUserContext);
-  const [name, setName] = useState('Виталий');
-  const [email, setEmail] = useState('pochta@gde.to');
+  const user = useContext(currentUserContext);
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isNameValid, setNameValidity] = useState(true);
   const [isEmailValid, setEmailValidity] = useState(true);
-  // const hasAnythingChanged = () => name !== user.name || email !== user.email;
+
+  const title = `Привет, ${user.name}!`;
 
   const isFormValid = () => isNameValid && isEmailValid; //  & hasAnythingChanged;
 
@@ -45,7 +46,7 @@ function ProfilePage({ onSubmitProfile, onSignOut }) {
   return (
     <main className='profile'>
       <section className='profile__lead'>
-        <h2 className='profile__heading'>Привет, Виталий!</h2>
+        <h2 className='profile__heading'>{title}</h2>
       </section>
       <form
         name='ProfileForm'

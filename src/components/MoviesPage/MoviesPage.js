@@ -6,7 +6,7 @@ import MoviesList from '../MoviesList/MoviesList';
 import { Movie } from '../Movie/Movie';
 import MoreButton from './MoreButton';
 
-import searchMovies from '../../helpers/searchMovies';
+import { reduceSearch } from '../../helpers/movieReducers';
 
 import './MoviesPages.css';
 
@@ -25,8 +25,9 @@ function MoviesPage({
   const [isShort, setShort] = useState(false);
   const [foundMovies, setFoundMovies] = useState([]);
   const [rows, setRows] = useState((columns > 3) ? 3 : (6 - columns));
+  const [isMoreShown, setMoreStatus] = useState(rows * columns <= foundMovies.length);
 
-  // const [isPreloaderShown, setPreloaderState] = useState(false);
+  const [isPreloaderShown, setPreloaderState] = useState(false);
   const increaseRows = () => {
     setRows(() => rows + 1);
   };
@@ -47,30 +48,39 @@ function MoviesPage({
     localStorage.setItem('all-short', String(isShort));
   }, [isShort]);
 
+  useEffect(() => setMoreStatus(rows * columns <= foundMovies.length),
+    [rows, columns, foundMovies.length]);
+
   function triggerShortFilms() {
-    if (isShort) {
-      //   setPreloaderState(true);
+    if (!isShort) {
+      setPreloaderState(true);
       onRefreshRequest();
-      setShort(() => !isShort);
     }
+    if (isShort && search.length < 3) {
+      setFoundMovies([]);
+    }
+
+    setShort(() => !isShort);
   }
 
   function handleSearchSubmit(term) {
-    if (search.length > 2) {
-      //   setPreloaderState(true);
+    if ((term.length > 2) || isShort) {
+      setPreloaderState(true);
       onRefreshRequest();
       setSearch(term);
     }
   }
-  // const searchFilms = React.useCallback(() => searchMovies(allMovies, search, isShort),
-  //  [allMovies, search, isShort]);
+
   useEffect(() => {
-    if (search.length > 0 || isShort) {
-      const newFoundFilms = searchMovies(allMovies, search, isShort);
-      setFoundMovies(newFoundFilms);
+    const processSearch = () => {
+      const newfound = allMovies.filter((film) => reduceSearch(film, search, isShort));
+      setFoundMovies(newfound);
+    };
+    if ((search.length > 0 || isShort) && !isLoading && isPreloaderShown) {
+      processSearch();
     }
-  //  setPreloaderState(false);
-  }, [search, isShort, allMovies]);
+    setPreloaderState(false);
+  }, [isLoading, isShort, allMovies, search, isPreloaderShown]);
 
   return (
     <main className='movies-list'>
@@ -84,15 +94,14 @@ function MoviesPage({
         : (
           <MoviesList
             component={Movie}
-            movies={foundMovies.slice(0, (columns * rows - 1))}
+            movies={foundMovies.slice(0, (columns * rows))}
             favourities={favourities}
             columns={columns}
             onMovieLike={onMovieLike}
             onMovieDislike={onMovieDislike}
-            isLoading={isLoading} />
+            isLoading={isPreloaderShown} />
         ) }
-      {<MoreButton onClick={increaseRows} />
-       && ((foundMovies.length >= columns * rows) && !isLoading && !isError)}
+      { (isMoreShown && !isLoading && !isError) ? <MoreButton onClick={increaseRows} /> : '' }
 
     </main>
   );

@@ -15,7 +15,8 @@ function ErrorPopup({
   onErrorClose,
   errorObject,
 }) {
-  const { errorName, errorMessage } = errorObject;
+  // const { errorName, errorMessage } = errorObject;
+  // console.dir(errorObject);
   const openModifier = isOpen ? 'popup_opened' : '';
   React.useEffect(() => {
     /**
@@ -33,9 +34,6 @@ function ErrorPopup({
     }
   }, [isOpen, onErrorClose]);
 
-  /**
-   * @param event
-   */
   function handleClose() {
     onErrorClose();
   }
@@ -51,10 +49,10 @@ function ErrorPopup({
       aria-hidden='true'>
       <div
         className='popup__container popup__container_content_tooltip'
-        aria-label={`Произошла ошибка: ${errorMessage}`}
+        aria-label={`Произошла ошибка: ${errorObject.message}`}
         role='alert'>
         <ErrorIcon />
-        <p className='popup__tooltip'>{`${errorName} : ${errorMessage}`}</p>
+        <p className='popup__tooltip'>{`${errorObject.name} : ${errorObject.message}`}</p>
         <button
           type='button'
           className='popup__close popup__close_tooltip'
@@ -69,8 +67,8 @@ ErrorPopup.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onErrorClose: PropTypes.func.isRequired,
   errorObject: PropTypes.shape({
-    errorName: PropTypes.string.isRequired,
-    errorMessage: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
   }).isRequired,
 };
 

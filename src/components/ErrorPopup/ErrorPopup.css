@@ -5,8 +5,8 @@
   left: 0;
   display: block;
   visibility: hidden;
-  height: 100%;
-  width: 100%;
+  height: calc(100vh - 1px);
+  width: calc(100vw - 1px);
   border: none;
   margin: 0;
   padding: 0;
@@ -21,9 +21,60 @@
   background-color: rgba(0,0,0,0.5);
   }
 
+.popup__container_content_tooltip {
+  position: fixed;
+  top: 130px;
+  left: calc((100vw - 240px) / 2);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-radius: 10px;
+  width: 240px;
+  padding: 50px 0;
+  min-height: 310px;
+  }
+
+.popup__close {
+  position: absolute;
+  box-sizing: border-box;
+  background-color: transparent;
+  background-size: contain;
+  background-image: url("../../images/close-button.svg");
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 42px;
+  height: 42px;
+  top: -42px;
+  right: -42px;
+  }
+
+.popup__close:hover {
+  opacity: 0.6;
+  transition: 0.7s ease-in-out;
+  cursor: pointer;
+  }
+
+
 .popup_opened {
   visibility: visible;
   opacity: 1;
+  }
+
+.popup__tooltip {
+  font-weight: 900;
+  font-size: 20px;
+  line-height: 1.2;
+  text-align: center;
+  color: #000000;
+  margin: 40px 0 0 0;
+  padding: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
   }
 
 

@@ -25,7 +25,7 @@ export function Movie({
 
   const thumbnail = `https://api.nomoreparties.co${image.url}`;
   const thumbnailAlt = (image.alternativeText.length > 0)
-    ? image.alternativeText.length
+    ? image.alternativeText
     : image.name;
 
   function onLikeClick() {
@@ -56,12 +56,12 @@ export function Movie({
 
 export function FavMovie({ movie, onMovieDislike }) {
   const {
-    id, duration, image, nameRU, trailerLink,
+    movieId, duration, image, nameRU, trailerLink,
   } = movie;
 
   const thumbnail = `https://api.nomoreparties.co${image.url}`;
   function handleDislikeClick() {
-    onMovieDislike(id);
+    onMovieDislike(movieId);
   }
   return (
     <li className='movie'>
@@ -71,7 +71,7 @@ export function FavMovie({ movie, onMovieDislike }) {
       <div className='movie__container'>
         <div className='movie__info'>
           <p className='movie__name'>{nameRU}</p>
-          <MovieDeleteButton isLiked onMovieDislike={handleDislikeClick} />
+          <MovieDeleteButton onMovieDislike={handleDislikeClick} />
         </div>
         <p className='movie__duration'>{getMovieDuration(duration)}</p>
       </div>
