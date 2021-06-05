@@ -1,7 +1,7 @@
 import React, {
   useState, useEffect,
 } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import './SignUpPage.css';
 
@@ -25,20 +25,11 @@ function SignUpPage({ onSignUpSubmit }) {
 
   const [isSignupInProgress, setSignupState] = useState(false);
 
-  const isLoggedIn = false;
-
-  const location = useLocation();
   useEffect(() => {
-    localStorage.setItem('movies-path', location.pathname);
-  });
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      setEmail('');
-      setPassword('');
-      setName('');
-    }
-  }, [isLoggedIn]);
+    setEmail('');
+    setPassword('');
+    setName('');
+  }, []);
 
   useEffect(() => {
     setFormValidityState(isEmailValid

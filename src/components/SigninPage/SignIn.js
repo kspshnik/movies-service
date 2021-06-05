@@ -1,7 +1,7 @@
 import React, {
   useState, useEffect,
 } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 
@@ -18,17 +18,10 @@ function SignInPage({ onSignInSubmit }) {
 
   const [isSigninInProgress, setSigninState] = useState(false);
 
-  const isLoggedIn = false;
-  const location = useLocation();
   useEffect(() => {
-    localStorage.setItem('movies-path', location.pathname);
-  });
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setEmail('');
-      setPassword('');
-    }
-  }, [isLoggedIn]);
+    setEmail('');
+    setPassword('');
+  }, []);
 
   useEffect(() => {
     setFormValidityState(isEmailValid

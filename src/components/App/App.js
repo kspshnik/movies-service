@@ -412,8 +412,10 @@ function App() {
     if (isLoggedIn) {
       getFavMovies();
       if ('movies-path' in localStorage) {
+        console.log(`Old route found. Redirecting to ${localStorage.getItem('movies-path')}`);
         history.push(localStorage.getItem('movies-path'));
       } else {
+        console.log('No old ways. Goin to /films then.');
         history.push('/films');
       }
     } else {
