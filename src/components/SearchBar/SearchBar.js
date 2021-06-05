@@ -41,7 +41,7 @@ function SearchBar({
           type='text'
           className='search__input'
           required
-          minLength='3'
+          minLength='1'
           maxLength='40'
           value={searchTerm}
           placeholder='Фильм'

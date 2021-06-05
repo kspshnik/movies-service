@@ -17,16 +17,18 @@ function MoviesPage({
   columns,
   onMovieLike,
   onMovieDislike,
+  term,
+  isShort,
+  onSearchSubmit,
   isLoading,
   isError,
   errorMessage,
-  onRefreshRequest,
 }) {
-  const [search, setSearch] = useState('');
-  const [isShort, setShort] = useState(false);
   const [foundMovies, setFoundMovies] = useState([]);
   const [rows, setRows] = useState((columns > 3) ? 3 : (6 - columns));
   const [isMoreShown, setMoreStatus] = useState(rows * columns <= foundMovies.length);
+  const [isNotFound, setNotFound] = useState(false);
+  const [noRequest, setSearchState] = useState(true);
 
   const [isPreloaderShown, setPreloaderState] = useState(false);
   const increaseRows = () => {
@@ -38,70 +40,52 @@ function MoviesPage({
     localStorage.setItem('movies-path', location.pathname);
   });
 
-  useEffect(() => {
-    if ('all-search' in localStorage) {
-      setSearch(localStorage.getItem('all-search'));
-    }
-    if ('all-short' in localStorage) {
-      setShort(localStorage.getItem('all-short') === 'true');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (foundMovies.length > 0) {
-      localStorage.setItem('all-found', JSON.stringify(foundMovies));
-    }
-  }, [foundMovies]);
-  useEffect(() => {
-    if ('all-found' in localStorage) {
-      setFoundMovies(JSON.parse(localStorage.getItem('all-found')));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('all-search', search);
-  }, [search]);
-
-  useEffect(() => {
-    localStorage.setItem('all-short', String(isShort));
-  }, [isShort]);
-
   useEffect(() => setMoreStatus(rows * columns <= foundMovies.length),
     [rows, columns, foundMovies.length]);
 
   function triggerShortFilms() {
-    setPreloaderState(true);
-    setShort(() => !isShort);
+    setSearchState(false);
+    onSearchSubmit(term, !isShort, setPreloaderState);
   }
 
-  function handleSearchSubmit(term) {
-    if ((term.length > 2) || isShort) {
-      setPreloaderState(true);
-      onRefreshRequest();
-      setSearch(term);
-    }
+  function handleSearchSubmit(keyword) {
+    setSearchState(keyword.length === 0);
+    onSearchSubmit(keyword, isShort, setPreloaderState);
   }
 
   useEffect(() => {
-    const processSearch = () => {
-      const newfound = allMovies.filter((film) => reduceSearch(film, search, isShort));
-      setFoundMovies(newfound);
-    };
-    if ((search.length > 0 || isShort) && !isLoading && isPreloaderShown) {
-      processSearch();
+    if (term.length > 0 || isShort) {
+      setFoundMovies(allMovies.filter((film) => reduceSearch(film, term, isShort)));
+    } else {
+      setSearchState(true);
+      setFoundMovies([]);
     }
-    setPreloaderState(false);
-  }, [isLoading, isShort, allMovies, search, isPreloaderShown]);
+  }, [term, isShort, allMovies]);
+
+  useEffect(() => {
+    setNotFound(foundMovies.length === 0);
+  }, [foundMovies.length]);
+
+  const notFoundMessage = (isNotFound && !noRequest)
+    ? `К сожалению, по Вашему запросу "${term}" ${isShort ? 'среди короткометражных фильмов' : ''} ничего не найдено.`
+    : '';
 
   return (
     <main className='movies-list'>
       <SearchBar
-        term={search}
+        term={term}
         isFiltering={isShort}
         onSearchSubmit={handleSearchSubmit}
         onClickRadio={triggerShortFilms} />
 
-      {isError ? <p className='movies-list__error'>{errorMessage}</p>
+      {(isError || isNotFound)
+        ? (
+          <p className='movies-list__error'>
+            {isError
+              ? errorMessage
+              : notFoundMessage}
+          </p>
+        )
         : (
           <MoviesList
             component={Movie}
@@ -124,10 +108,12 @@ MoviesPage.propTypes = {
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
+  term: PropTypes.string.isRequired,
+  isShort: PropTypes.bool.isRequired,
+  onSearchSubmit: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
   isError: PropTypes.bool,
   errorMessage: PropTypes.string,
-  onRefreshRequest: PropTypes.func.isRequired,
 };
 
 MoviesPage.defaultProps = {

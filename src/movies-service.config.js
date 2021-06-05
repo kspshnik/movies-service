@@ -10,3 +10,5 @@ export const BACKEND_ROUTES = {
 };
 
 export const SHORTMOVIE_LIMIT = 41;
+
+export const EXPIRY_TRESHOLD = 86000;

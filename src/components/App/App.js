@@ -18,6 +18,7 @@ import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import ErrorPopup from '../Popup/ErrorPopup';
 import SuccessPopup from '../Popup/SuccessPopup';
 
+import { EXPIRY_TRESHOLD } from '../../movies-service.config';
 import {
   reduceMovieToFavs, reduceMoviesToFront, reduceFavsToMap, reduceFavsToFront,
 } from '../../helpers/movieReducers';
@@ -50,10 +51,12 @@ function App() {
   const [favMovies, setFavMovies] = useState([]);
   const [favMap, setFavMap] = useState({ });
 
-  const [isReloadRequested, setReloadState] = useState(false);
   const [isBeatFilmsLoadingError, setBeatFilmsErrorState] = useState(false);
   const [isFavMoviesLoadingError, setFavMoviesErrorState] = useState(false);
   const [isBeatFilmsLoading, setBeatFilmsLoadingState] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isShortMovie, setShortMovie] = useState(false);
 
   const makeErrorObject = (error) => {
     const { name, message } = error;
@@ -202,6 +205,26 @@ function App() {
     }
   }
 
+  async function getAllMovies(term, isShort, setPreloaderState) {
+    setBeatFilmsLoadingState(true);
+    setBeatFilmsErrorState(false);
+    setPreloaderState(true);
+    setBeatErrorState(defaultMoviesError);
+    try {
+      const beatPromise = moviesAPI.getBeatFilms();
+      const films = await beatPromise;
+      setAllMovies(films);
+      setSearchTerm(term);
+      setShortMovie(isShort);
+    } catch (error) {
+      setBeatErrorState(makeErrorObject(error));
+      setBeatFilmsErrorState(true);
+    } finally {
+      setBeatFilmsLoadingState(false);
+      setPreloaderState(false);
+    }
+  }
+
   function handleSignOut() {
     localStorage.removeItem('jwt-movies');
     if ('movies-path' in localStorage) {
@@ -236,18 +259,63 @@ function App() {
     handleDeleteFavourite(favMap[id]);
   }
 
-  function handleBeatMoviesRefresh() {
-    setReloadState(true);
+  function handleSearchRequest(term, isShort, setPreloaderState) {
+    if (allMovies.length === 0) {
+      getAllMovies(term, isShort, setPreloaderState);
+    } else {
+      setSearchTerm(term);
+      setShortMovie(isShort);
+    }
   }
 
   useEffect(() => {
     if (allMovies.length > 0) {
-      localStorage.setItem('all-movies', JSON.stringify(allMovies));
+      localStorage.setItem('all-movies', JSON.stringify({ age: Date.now(), data: allMovies }));
     }
   }, [allMovies]);
+
+  useEffect(() => {
+    localStorage.setItem('all-search', JSON.stringify({ age: Date.now(), term: searchTerm }));
+  }, [searchTerm]);
+
+  useEffect(() => {
+    localStorage.setItem('all-short', JSON.stringify({ age: Date.now(), short: isShortMovie }));
+  }, [isShortMovie]);
+
   useEffect(() => {
     if ('all-movies' in localStorage) {
-      setAllMovies(JSON.parse(localStorage.getItem('all-movies')));
+      const moviesData = JSON.parse(localStorage.getItem('all-movies'));
+      if ((Date.now() - moviesData.age) < EXPIRY_TRESHOLD) {
+        setAllMovies(moviesData.data);
+      } else {
+        localStorage.removeItem('all-movies');
+        setAllMovies('');
+      }
+    } else {
+      setAllMovies([]);
+    }
+
+    if ('all-search' in localStorage) {
+      const searchData = JSON.parse(localStorage.getItem('all-search'));
+      if ((Date.now() - searchData.age) < EXPIRY_TRESHOLD) {
+        setSearchTerm(searchData.term);
+      } else {
+        localStorage.removeItem('all-search');
+        setSearchTerm('');
+      }
+    } else {
+      setSearchTerm('');
+    }
+    if ('all-short' in localStorage) {
+      const shortData = JSON.parse(localStorage.getItem('all-short'));
+      if ((Date.now() - shortData.age) < EXPIRY_TRESHOLD) {
+        setShortMovie(shortData.term);
+      } else {
+        localStorage.removeItem('all-short');
+        setShortMovie('');
+      }
+    } else {
+      setShortMovie('');
     }
   }, []);
 
@@ -287,28 +355,6 @@ function App() {
     }
   },
   []);
-
-  useEffect(() => {
-    async function getAllMovies() {
-      setBeatFilmsLoadingState(true);
-      setBeatFilmsErrorState(false);
-      setBeatErrorState(defaultMoviesError);
-      try {
-        const beatPromise = moviesAPI.getBeatFilms();
-        const films = await beatPromise;
-        setAllMovies(films);
-      } catch (error) {
-        setBeatErrorState(makeErrorObject(error));
-        setBeatFilmsErrorState(true);
-      } finally {
-        setBeatFilmsLoadingState(false);
-        setReloadState(false);
-      }
-    }
-    if (isReloadRequested) {
-      getAllMovies();
-    }
-  }, [isReloadRequested, defaultMoviesError]);
 
   useEffect(() => {
     async function getFavMovies() {
@@ -351,12 +397,14 @@ function App() {
             allMovies={reduceMoviesToFront(allMovies)}
             favourities={Object.keys(favMap)}
             columns={columnsCount}
+            term={searchTerm}
+            isShort={isShortMovie}
+            onSearchSubmit={handleSearchRequest}
             onMovieDislike={handleMovieDislike}
             onMovieLike={handleMovieLike}
             isLoading={isBeatFilmsLoading}
             isError={isBeatFilmsLoadingError}
-            errorMessaget={`${beatErrorObject.error} \n${beatErrorObject.errorMessage}`}
-            onRefreshRequest={handleBeatMoviesRefresh} />
+            errorMessaget={`${beatErrorObject.error} \n${beatErrorObject.errorMessage}`} />
           <ProtectedRoute
             component={FavouriteMoviesPage}
             path='/saved-films'
