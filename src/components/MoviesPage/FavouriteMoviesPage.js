@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 
 import SearchBar from '../SearchBar/SearchBar';
 import MoviesList from '../MoviesList/MoviesList';
@@ -16,14 +17,14 @@ const FavouriteMoviesPage = ({
   isError,
   errorMessage,
 }) => {
-  const [foundMovies, setFoundMovies] = useState([]);
+  const [foundMovies, setFoundMovies] = useState(favouriteMovies);
   const [search, setSearch] = useState('');
   const [isShort, setShort] = useState(false);
-  const [isJustMounted, setJustMounted] = useState(false);
 
+  const location = useLocation();
   useEffect(() => {
-    setJustMounted(true);
-  }, []);
+    localStorage.setItem('movies-path', location.pathname);
+  });
 
   useEffect(() => {
     if ('fav-search' in localStorage) {
@@ -44,25 +45,22 @@ const FavouriteMoviesPage = ({
     setSearch(term);
     localStorage.setItem('fav-search', term);
   }
+
   useEffect(() => {
-    const processSearch = () => {
-      if (search.length > 0) {
-        const newfound = favouriteMovies.filter((film) => reduceSearch(film, search, isShort));
-        setFoundMovies(newfound);
-      } else if (isShort) {
-        const allShort = favouriteMovies.filter((movie) => movie.duration < 41);
-        setFoundMovies(allShort);
-      } else {
-        setFoundMovies(favouriteMovies);
-      }
-    };
-    if (search.length > 0 || isShort) {
-      processSearch();
-    } else if (isJustMounted) {
-      processSearch();
-      setJustMounted(false);
+    if (foundMovies.length > 0) {
+      localStorage.setItem('fav-found', JSON.stringify(foundMovies));
     }
-  }, [isShort, search, favouriteMovies, isJustMounted]);
+  }, [foundMovies]);
+  useEffect(() => {
+    if ('fav-found' in localStorage) {
+      setFoundMovies(JSON.parse(localStorage.getItem('fav-found')));
+    }
+  }, []);
+
+  useEffect(() => {
+    const newfound = favouriteMovies.filter((film) => reduceSearch(film, search, isShort));
+    setFoundMovies(newfound);
+  }, [isShort, search, favouriteMovies]);
 
   return (
     <main className='movies-list movies-list_favourites'>

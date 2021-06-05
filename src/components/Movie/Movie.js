@@ -56,12 +56,12 @@ export function Movie({
 
 export function FavMovie({ movie, onMovieDislike }) {
   const {
-    movieId, duration, image, nameRU, trailerLink,
+    id, duration, image, nameRU, trailerLink,
   } = movie;
 
   const thumbnail = `https://api.nomoreparties.co${image.url}`;
   function handleDislikeClick() {
-    onMovieDislike(movieId);
+    onMovieDislike(id);
   }
   return (
     <li className='movie'>

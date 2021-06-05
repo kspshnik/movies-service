@@ -1,4 +1,24 @@
+import { SHORTMOVIE_LIMIT } from '../movies-service.config';
+
+const reduceUndefined = (movie) => {
+  const importantStringKeys = ['country', 'director', 'description', 'year', 'nameRU', 'nameEN', 'trailerLink'];
+  const film = movie;
+
+  importantStringKeys.forEach((key) => {
+    if (!(key in film)) {
+      film[key] = '';
+    }
+  });
+  if (!film.duration) {
+    film.duration = 0;
+  }
+  if (!film.id) {
+    film.id = -1;
+  }
+  return film;
+};
 export const reduceMovieToFavs = (movie) => {
+  const mov = reduceUndefined(movie);
   const {
     country,
     description,
@@ -7,7 +27,7 @@ export const reduceMovieToFavs = (movie) => {
     year,
     nameRU,
     nameEN,
-  } = movie;
+  } = mov;
   const film = {
     country,
     description,
@@ -33,7 +53,7 @@ export const reduceMoviesToFront = (movies) => movies.map((film) => {
   const movie = film;
   const {
     nameRU, description, director, duration, year, id, trailerLink,
-  } = movie;
+  } = reduceUndefined(movie);
   if (!movie.image) {
     movie.image = {};
     movie.image.url = '';
@@ -89,9 +109,14 @@ export const reduceFavsToMap = (favs) => {
 
 export const reduceSearch = (movie, term, isShort) => {
   const {
-    nameRU, nameEN, director, description, duration,
+    nameRU, description, duration,
   } = movie;
-  return (isShort
-    ? (`${nameRU} ${nameEN} ${director} ${description}`.includes(term)) && (duration < 41)
-    : `${nameRU} ${nameEN} ${director} ${description}`.includes(term));
+
+  const res = (`${nameRU}  ${description}`
+    .replace(',', ' ')
+    .replace('.', ' ')
+    .split(' ')
+    .filter((word) => word.includes(term))
+    .length > 0) && (!isShort || (duration < SHORTMOVIE_LIMIT));
+  return res;
 };

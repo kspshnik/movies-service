@@ -23,8 +23,8 @@
 
 .popup__container_content_tooltip {
   position: fixed;
-  top: 130px;
-  left: calc((100vw - 240px) / 2);
+  top: 30vh;
+  left: 30vw;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
   display: flex;
@@ -33,7 +33,7 @@
   justify-content: space-between;
   background-color: #ffffff;
   border-radius: 10px;
-  width: 240px;
+  width: 40vw;
   padding: 50px 0;
   min-height: 310px;
   }
@@ -43,7 +43,7 @@
   box-sizing: border-box;
   background-color: transparent;
   background-size: contain;
-  background-image: url("../../images/close-button.svg");
+  background-image: url('../../images/Сlose-button.svg');
   border: none;
   padding: 0;
   margin: 0;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Switch, Route, useHistory,
 } from 'react-router-dom';
@@ -13,20 +13,24 @@ import ProfilePage from '../ProfilePage/ProfilePage';
 import SignUpPage from '../SignupPage/SignUpPage';
 import SignInPage from '../SigninPage/SignIn';
 import Footer from '../Footer/Footer';
-// import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import LandingPage from '../LandingPage/LandingPage';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import ErrorPopup from '../Popup/ErrorPopup';
+import SuccessPopup from '../Popup/SuccessPopup';
 
 import {
   reduceMovieToFavs, reduceMoviesToFront, reduceFavsToMap, reduceFavsToFront,
 } from '../../helpers/movieReducers';
 import moviesAPI from '../../helpers/api';
 import prepareError from '../../helpers/prepareError';
-import ErrorPopup from '../ErrorPopup/ErrorPopup';
 
 import currentUserContext from '../../contexts/currentUserContext';
 
 function App() {
+  const defaultMoviesError = useMemo(() => ({ error: '', errorMessage: '' }), []);
+  const defaultGeneralError = useMemo(() => ({ name: '', message: '' }), []);
+  const defaultSuccessMessage = useMemo(() => (''), []);
+  const defaultProfile = useMemo(() => ({ name: '', email: '' }), []);
   const history = useHistory();
   const getMoviesCount = () => {
     const rootElement = document.documentElement;
@@ -36,10 +40,12 @@ function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isHamburgerOpen, setHamburgerVisibility] = useState(false);
   const [isErrorTooltipOpen, setErrorTooltipVisibility] = useState(false);
-  const [errorObject, setErrorState] = useState({ name: '', message: '' });
-  const [beatErrorObject, setBeatErrorState] = useState({ error: '', errorMessage: '' });
-  const [favsErrorObject, setFavsErrorState] = useState({ error: '', errorMessage: '' });
-  const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
+  const [isSuccessTooltipOpen, setSuccessTooltipVisibility] = useState(false);
+  const [errorObject, setErrorState] = useState(defaultGeneralError);
+  const [beatErrorObject, setBeatErrorState] = useState(defaultMoviesError);
+  const [favsErrorObject, setFavsErrorState] = useState(defaultMoviesError);
+  const [successMessage, setSuccessMessage] = useState(defaultSuccessMessage);
+  const [currentUser, setCurrentUser] = useState(defaultProfile);
   const [allMovies, setAllMovies] = useState([]);
   const [favMovies, setFavMovies] = useState([]);
   const [favMap, setFavMap] = useState({ });
@@ -54,7 +60,7 @@ function App() {
     return { name, message };
   };
 
-  async function handleSignIn(email, password) {
+  async function handleSignIn(email, password, setSigninState) {
     try {
       const signinPromise = await moviesAPI.signIn(email, password);
       const signedInUser = await signinPromise;
@@ -88,10 +94,12 @@ function App() {
     } catch (error) {
       setErrorState(makeErrorObject(error));
       setErrorTooltipVisibility(true);
+    } finally {
+      setSigninState(false);
     }
   }
 
-  async function handleSignUp(name, email, password) {
+  async function handleSignUp(name, email, password, setSignupState) {
     try {
       const signupPromise = moviesAPI.signUp(name, email, password);
       const user = await signupPromise;
@@ -108,11 +116,15 @@ function App() {
     } catch (error) {
       setErrorState(makeErrorObject(error));
       setErrorTooltipVisibility(true);
+    } finally {
+      setSignupState(false);
     }
+    setSuccessMessage('Вы успешно зарегистрировались!');
+    setSuccessTooltipVisibility(true);
     handleSignIn(email, password);
   }
 
-  async function handleUpdateProfile(name, email) {
+  async function handleUpdateProfile(name, email, setProfileUpdateState) {
     try {
       const profilePromise = await moviesAPI.setProfile(name, email);
       const profile = await profilePromise;
@@ -127,9 +139,13 @@ function App() {
         }
       }
       setCurrentUser({ name: profile.name, email: profile.email });
+      setSuccessMessage('Данные профиля успешно изменены!');
+      setSuccessTooltipVisibility(true);
     } catch (error) {
       setErrorState(makeErrorObject(error));
       setErrorTooltipVisibility(true);
+    } finally {
+      setProfileUpdateState(false);
     }
   }
 
@@ -188,9 +204,14 @@ function App() {
 
   function handleSignOut() {
     localStorage.removeItem('jwt-movies');
+    if ('movies-path' in localStorage) {
+      localStorage.removeItem('movies-path');
+    }
     setLoggedIn(false);
     setCurrentUser({ name: '', email: '' });
     history.push('/');
+    setSuccessMessage('Вы успешно вышли из системы!');
+    setSuccessTooltipVisibility(true);
   }
   function handleOpenHamburger() {
     setHamburgerVisibility(true);
@@ -198,8 +219,14 @@ function App() {
   function handleCloseHamburger() {
     setHamburgerVisibility(false);
   }
-  function handleErrorTooltipClose() { setErrorTooltipVisibility(false); }
-
+  function handleErrorTooltipClose() {
+    setErrorTooltipVisibility(false);
+    setErrorState(defaultGeneralError);
+  }
+  function handleSuccessTooltipClose() {
+    setSuccessTooltipVisibility(false);
+    setSuccessMessage(defaultSuccessMessage);
+  }
   function handleMovieLike(id) {
     const movie = reduceMovieToFavs(allMovies.filter((film) => film.id === id)[0]);
     handleSetFavourite(movie);
@@ -212,6 +239,17 @@ function App() {
   function handleBeatMoviesRefresh() {
     setReloadState(true);
   }
+
+  useEffect(() => {
+    if (allMovies.length > 0) {
+      localStorage.setItem('all-movies', JSON.stringify(allMovies));
+    }
+  }, [allMovies]);
+  useEffect(() => {
+    if ('all-movies' in localStorage) {
+      setAllMovies(JSON.parse(localStorage.getItem('all-movies')));
+    }
+  }, []);
 
   useEffect(() => {
     const setColumns = () => {
@@ -254,6 +292,7 @@ function App() {
     async function getAllMovies() {
       setBeatFilmsLoadingState(true);
       setBeatFilmsErrorState(false);
+      setBeatErrorState(defaultMoviesError);
       try {
         const beatPromise = moviesAPI.getBeatFilms();
         const films = await beatPromise;
@@ -269,10 +308,12 @@ function App() {
     if (isReloadRequested) {
       getAllMovies();
     }
-  }, [isReloadRequested]);
+  }, [isReloadRequested, defaultMoviesError]);
 
   useEffect(() => {
     async function getFavMovies() {
+      setFavMoviesErrorState(false);
+      setFavMoviesErrorState(defaultMoviesError);
       try {
         const favsPromise = moviesAPI.getFavouriteMovies();
         const films = await favsPromise;
@@ -285,11 +326,15 @@ function App() {
     }
     if (isLoggedIn) {
       getFavMovies();
-      history.push('/films');
+      if ('movies-path' in localStorage) {
+        history.push(localStorage.getItem('movies-path'));
+      } else {
+        history.push('/films');
+      }
     } else {
       setFavMap([]);
     }
-  }, [isLoggedIn, history]);
+  }, [isLoggedIn, history, defaultMoviesError]);
 
   return (
     <div className='page typo'>
@@ -353,6 +398,10 @@ function App() {
         onErrorClose={handleErrorTooltipClose}
         isOpen={isErrorTooltipOpen}
         errorObject={errorObject} />
+      <SuccessPopup
+        onSuccessClose={handleSuccessTooltipClose}
+        isOpen={isSuccessTooltipOpen}
+        message={successMessage} />
     </div>
   );
 }

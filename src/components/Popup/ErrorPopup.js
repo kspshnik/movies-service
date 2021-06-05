@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ReactComponent as ErrorIcon } from '../../images/error-sign.svg';
+import { ReactComponent as ErrorIcon } from '../../images/Error-sign.svg';
 
-import './ErrorPopup.css';
+import './Popup.css';
 
 /**
  * @param root0

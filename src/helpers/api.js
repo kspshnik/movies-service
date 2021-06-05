@@ -1,13 +1,5 @@
-const movieServer = {
-  base: 'https://api.kspshnik.xyz/movies',
-  beatFilms: 'https://api.nomoreparties.co/beatfilm-movies',
-  routes: {
-    signup: '/signup',
-    signin: '/signin',
-    profile: '/users/me',
-    movies: '/movies',
-  },
-};
+import { BACKEND_ROUTES } from '../movies-service.config';
+
 class API {
   constructor(server) {
     this._base = server.base;
@@ -117,6 +109,6 @@ class API {
   }
 }
 
-const moviesAPI = new API(movieServer);
+const moviesAPI = new API(BACKEND_ROUTES);
 
 export default moviesAPI;

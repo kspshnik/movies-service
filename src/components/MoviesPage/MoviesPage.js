@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 
 import SearchBar from '../SearchBar/SearchBar';
 import MoviesList from '../MoviesList/MoviesList';
@@ -31,12 +32,29 @@ function MoviesPage({
   const increaseRows = () => {
     setRows(() => rows + 1);
   };
+
+  const location = useLocation();
+  useEffect(() => {
+    localStorage.setItem('movies-path', location.pathname);
+  });
+
   useEffect(() => {
     if ('all-search' in localStorage) {
       setSearch(localStorage.getItem('all-search'));
     }
     if ('all-short' in localStorage) {
       setShort(localStorage.getItem('all-short') === 'true');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (foundMovies.length > 0) {
+      localStorage.setItem('all-found', JSON.stringify(foundMovies));
+    }
+  }, [foundMovies]);
+  useEffect(() => {
+    if ('all-found' in localStorage) {
+      setFoundMovies(JSON.parse(localStorage.getItem('all-found')));
     }
   }, []);
 
@@ -52,14 +70,7 @@ function MoviesPage({
     [rows, columns, foundMovies.length]);
 
   function triggerShortFilms() {
-    if (!isShort) {
-      setPreloaderState(true);
-      onRefreshRequest();
-    }
-    if (isShort && search.length < 3) {
-      setFoundMovies([]);
-    }
-
+    setPreloaderState(true);
     setShort(() => !isShort);
   }
 
