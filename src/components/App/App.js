@@ -55,10 +55,11 @@ function App() {
   const [isFavMoviesLoadingError, setFavMoviesErrorState] = useState(false);
   const [isBeatFilmsLoading, setBeatFilmsLoadingState] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('старт');
   const [isShortMovie, setShortMovie] = useState(false);
   const [favTerm, setFavTerm] = useState('');
   const [isShortFav, setShortFav] = useState(false);
+  const [isFirstRun, setFirstRun] = useState(true);
   const makeErrorObject = (error) => {
     const { name, message } = error;
     return { name, message };
@@ -281,12 +282,19 @@ function App() {
   }, [allMovies]);
 
   useEffect(() => {
-    localStorage.setItem('all-search', JSON.stringify({ age: Date.now(), term: searchTerm }));
-  }, [searchTerm]);
+    if (!isFirstRun || !('all-search' in localStorage)) {
+      localStorage.setItem('all-search', JSON.stringify({ age: Date.now(), term: searchTerm }));
+    }
+    setFirstRun(false);
+  },
+  [searchTerm, isFirstRun]);
 
   useEffect(() => {
-    localStorage.setItem('all-short', JSON.stringify({ age: Date.now(), short: isShortMovie }));
-  }, [isShortMovie]);
+    if (!isFirstRun || !('all-short' in localStorage)) {
+      localStorage.setItem('all-short', JSON.stringify({ age: Date.now(), short: isShortMovie }));
+    }
+    setFirstRun(false);
+  }, [isShortMovie, isFirstRun]);
 
   useEffect(() => {
     if ('all-movies' in localStorage) {
@@ -315,7 +323,7 @@ function App() {
     if ('all-short' in localStorage) {
       const shortData = JSON.parse(localStorage.getItem('all-short'));
       if ((Date.now() - shortData.age) < EXPIRY_TRESHOLD) {
-        setShortMovie(shortData.term);
+        setShortMovie(shortData.short);
       } else {
         localStorage.removeItem('all-short');
         setShortMovie(false);
@@ -326,12 +334,18 @@ function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('fav-search', JSON.stringify({ age: Date.now(), term: favTerm }));
-  }, [favTerm]);
+    if (!isFirstRun || !('fav-search' in localStorage)) {
+      localStorage.setItem('fav-search', JSON.stringify({ age: Date.now(), term: favTerm }));
+    }
+    setFirstRun(false);
+  }, [favTerm, isFirstRun]);
 
   useEffect(() => {
-    localStorage.setItem('fav-short', JSON.stringify({ age: Date.now(), short: isShortFav }));
-  }, [isShortFav]);
+    if (!isFirstRun || !('fav-short' in localStorage)) {
+      localStorage.setItem('fav-short', JSON.stringify({ age: Date.now(), short: isShortFav }));
+    }
+    setFirstRun(false);
+  }, [isShortFav, isFirstRun]);
 
   useEffect(() => {
     if ('fav-search' in localStorage) {
