@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 
 import SearchBar from '../SearchBar/SearchBar';
 import MoviesList from '../MoviesList/MoviesList';
 import { Movie } from '../Movie/Movie';
 import MoreButton from './MoreButton';
 
-import searchMovies from '../../helpers/searchMovies';
+import { reduceSearch } from '../../helpers/movieReducers';
 
 import './MoviesPages.css';
+import { EXPIRY_TRESHOLD } from '../../movies-service.config';
 
 function MoviesPage({
   allMovies,
@@ -16,71 +18,111 @@ function MoviesPage({
   columns,
   onMovieLike,
   onMovieDislike,
+  term,
+  isShort,
+  onSearchSubmit,
   isLoading,
   isError,
   errorMessage,
 }) {
-  const [search, setSearch] = useState('');
-  const [isShort, setShort] = useState(false);
   const [foundMovies, setFoundMovies] = useState([]);
   const [rows, setRows] = useState((columns > 3) ? 3 : (6 - columns));
+  const [isMoreShown, setMoreStatus] = useState(rows * columns <= foundMovies.length);
+  const [isNotFound, setNotFound] = useState(false);
+  const [noRequest, setSearchState] = useState(true);
+  const [isFirstRun, setFirstRun] = useState(true);
 
-  // const [isPreparingMovies, setPreparingMoviesState] = useState(false);
+  const [isPreloaderShown, setPreloaderState] = useState(false);
   const increaseRows = () => {
     setRows(() => rows + 1);
   };
+
+  const location = useLocation();
   useEffect(() => {
-    if ('all-search' in localStorage) {
-      setSearch(localStorage.getItem('all-search'));
+    localStorage.setItem('movies-path', location.pathname);
+  });
+
+  useEffect(() => setMoreStatus(rows * columns <= foundMovies.length),
+    [rows, columns, foundMovies.length]);
+
+  function triggerShortFilms() {
+    setSearchState(false);
+    onSearchSubmit(term, !isShort, setPreloaderState);
+  }
+
+  function handleSearchSubmit(keyword) {
+    setSearchState(keyword.length === 0);
+    onSearchSubmit(keyword, isShort, setPreloaderState);
+  }
+  useEffect(() => {
+    if (!isFirstRun) {
+      if (foundMovies.length > 0) {
+        localStorage.setItem('all-found', JSON.stringify({ age: Date.now(), data: foundMovies }));
+      } else if ((foundMovies.length === 0) && (term.length === 0)) {
+        localStorage.setItem('all-found', JSON.stringify({ age: Date.now(), data: [] }));
+      }
     }
-    if ('all-short' in localStorage) {
-      setShort(localStorage.getItem('all-short') === 'true');
+  }, [foundMovies, isFirstRun, term]);
+
+  useEffect(() => {
+    if ('all-found' in localStorage) {
+      const moviesData = JSON.parse(localStorage.getItem('all-found'));
+      if ((Date.now() - moviesData.age) < EXPIRY_TRESHOLD) {
+        setFoundMovies(moviesData.data);
+      } else {
+        localStorage.removeItem('all-found');
+        setFoundMovies([]);
+      }
+    } else {
+      setFoundMovies([]);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('all-search', search);
-  }, [search]);
-
-  useEffect(() => {
-    localStorage.setItem('all-short', String(isShort));
-  }, [isShort]);
-
-  function triggerShortFilms() {
-    setShort(() => !isShort);
-  }
-
-  function handleSearchSubmit(term) {
-    setSearch(term);
-  }
-
-  useEffect(() => {
-    if (search.length > 0 || isShort) {
-      setFoundMovies(searchMovies(allMovies, search, isShort));
+    if (((term.length > 0 || isShort) && allMovies && allMovies.length > 0) && (!isFirstRun || !('all-found' in localStorage))) {
+      setFoundMovies(allMovies.filter((film) => reduceSearch(film, term, isShort)));
+    } else {
+      setSearchState(true);
+      setFoundMovies([]);
     }
-  }, [search, isShort, allMovies]);
+    setFirstRun(false);
+  }, [term, isShort, allMovies, isFirstRun]);
+
+  useEffect(() => {
+    setNotFound(foundMovies.length === 0);
+  }, [foundMovies.length]);
+
+  const notFoundMessage = (isNotFound && !noRequest)
+    ? `К сожалению, по Вашему запросу "${term}" ${isShort ? 'среди короткометражных фильмов' : ''} ничего не найдено.`
+    : '';
 
   return (
     <main className='movies-list'>
       <SearchBar
-        term={search}
+        term={term}
         isFiltering={isShort}
         onSearchSubmit={handleSearchSubmit}
         onClickRadio={triggerShortFilms} />
 
-      {isError ? <p className='movies-list__error'>{errorMessage}</p>
+      {(isError || isNotFound)
+        ? (
+          <p className='movies-list__error'>
+            {isError
+              ? errorMessage
+              : notFoundMessage}
+          </p>
+        )
         : (
           <MoviesList
             component={Movie}
-            movies={foundMovies.slice(0, (columns * rows - 1))}
+            movies={foundMovies.slice(0, (columns * rows))}
             favourities={favourities}
             columns={columns}
             onMovieLike={onMovieLike}
             onMovieDislike={onMovieDislike}
-            isLoading={isLoading} />
+            isLoading={isPreloaderShown} />
         ) }
-      {<MoreButton onClick={increaseRows} />
-       && ((foundMovies.length >= columns * rows) && !isLoading && !isError)}
+      { (isMoreShown && !isLoading && !isError) ? <MoreButton onClick={increaseRows} /> : '' }
 
     </main>
   );
@@ -92,6 +134,9 @@ MoviesPage.propTypes = {
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
+  term: PropTypes.string.isRequired,
+  isShort: PropTypes.bool.isRequired,
+  onSearchSubmit: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
   isError: PropTypes.bool,
   errorMessage: PropTypes.string,

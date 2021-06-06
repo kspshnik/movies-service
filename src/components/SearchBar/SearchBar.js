@@ -20,11 +20,13 @@ function SearchBar({
   const [isSubmitDisabled, setSubmitDisabled] = useState(true);
   useEffect(() => {
     setSearchTerm(term);
+    setSubmitDisabled(false);
   }, [term]);
+
   const handleSearchTermChange = (event) => {
     const input = event.target;
     setSearchTerm(input.value);
-    setSubmitDisabled(input.value.length < 2);
+    setSubmitDisabled((input.value.length < 2) && (input.value.length > 0));
   };
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,21 +34,21 @@ function SearchBar({
   };
   return (
     <section className='search'>
-      <form className='search__form'>
+      <form className='search__form' onSubmit={onSearchSubmit}>
         <input
           id='search-input'
           name='searchInput'
           type='text'
           className='search__input'
           required
-          minLength='3'
+          minLength='1'
           maxLength='40'
           value={searchTerm}
           placeholder='Фильм'
           onChange={handleSearchTermChange} />
         <button
           type='submit'
-          className='search__button'
+          className={`search__button ${isSubmitDisabled ? 'search__button_disabled' : ''}`}
           onClick={handleSubmit}
           disabled={isSubmitDisabled}>
           Поиск

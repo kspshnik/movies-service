@@ -1,58 +1,105 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 
 import SearchBar from '../SearchBar/SearchBar';
 import MoviesList from '../MoviesList/MoviesList';
 import { FavMovie } from '../Movie/Movie';
 
 import './MoviesPages.css';
-import searchMovies from '../../helpers/searchMovies';
+import { reduceSearch } from '../../helpers/movieReducers';
+import { EXPIRY_TRESHOLD } from '../../movies-service.config';
 
 const FavouriteMoviesPage = ({
   favouriteMovies,
   onMovieLike,
   onMovieDislike,
   columns,
+  term,
+  isShort,
+  onSearchSubmit,
   isError,
   errorMessage,
 }) => {
-  const [foundMovies, setFoundMovies] = useState([]);
-  const [search, setSearch] = useState('');
-  const [isShort, setShort] = useState(false);
+  const [foundMovies, setFoundMovies] = useState(favouriteMovies);
+  const [isNotFound, setNotFound] = useState(false);
+  const [noRequest, setSearchState] = useState(true);
+  const [isFirstRun, setFirstRun] = useState(true);
+  const [isAllFavsShown, setAllFavsState] = useState(false);
+
+  const location = useLocation();
+  useEffect(() => {
+    localStorage.setItem('movies-path', location.pathname);
+  });
+
+  function triggerShortFilms() {
+    setSearchState(false);
+    onSearchSubmit(term, !isShort);
+  }
+
+  function handleSearchSubmit(keyword) {
+    setSearchState(keyword.length === 0);
+    onSearchSubmit(keyword, isShort);
+  }
 
   useEffect(() => {
-    if ('fav-search' in localStorage) {
-      setSearch(localStorage.getItem('fav-search'));
+    if ((foundMovies.length > 0 || !isFirstRun) && !isAllFavsShown) {
+      localStorage.setItem('fav-found', JSON.stringify({ age: Date.now(), data: foundMovies }));
     }
-    if ('fav-short' in localStorage) {
-      setShort(localStorage.getItem('fav-short') === 'true');
+    if (isAllFavsShown) {
+      localStorage.setItem('fav-found', JSON.stringify({ age: Date.now(), data: [] }));
+    }
+  }, [foundMovies, isFirstRun, isAllFavsShown]);
+
+  useEffect(() => {
+    if ('fav-found' in localStorage) {
+      const moviesData = JSON.parse(localStorage.getItem('fav-found'));
+      if ((Date.now() - moviesData.age) < EXPIRY_TRESHOLD) {
+        setFoundMovies(moviesData.data);
+      } else {
+        localStorage.removeItem('fav-found');
+        setFoundMovies([]);
+      }
+    } else {
+      setFoundMovies([]);
     }
   }, []);
 
-  function triggerShortFilms() {
-    const newShort = !isShort;
-    setShort(() => newShort);
-    localStorage.setItem('fav-short', String(newShort));
-  }
-
-  function handleSearchSubmit(term) {
-    setSearch(term);
-    localStorage.setItem('fav-search', term);
-  }
   useEffect(() => {
-    if (search.length > 0 || isShort) {
-      setFoundMovies(searchMovies(favouriteMovies, search, isShort));
+    if (((term.length > 0 || isShort) && favouriteMovies && favouriteMovies.length > 0) && (!isFirstRun || !('fav-found' in localStorage))) {
+      setFoundMovies(favouriteMovies.filter((film) => reduceSearch(film, term, isShort)));
+      setAllFavsState(false);
+    } else {
+      setSearchState(true);
+      setAllFavsState(true);
+      setFoundMovies(favouriteMovies);
     }
-  }, [search, isShort, favouriteMovies]);
+    setFirstRun(false);
+  }, [term, isShort, favouriteMovies, isFirstRun]);
+
+  useEffect(() => {
+    setNotFound(foundMovies.length === 0);
+  }, [foundMovies.length]);
+
+  const notFoundMessage = (isNotFound && !noRequest)
+    ? `К сожалению, по Вашему запросу "${term}" ${isShort ? 'среди короткометражных фильмов' : ''} ничего не найдено.`
+    : '';
 
   return (
     <main className='movies-list movies-list_favourites'>
       <SearchBar
-        term={search}
+        term={term}
         isFiltering={isShort}
         onSearchSubmit={handleSearchSubmit}
         onClickRadio={triggerShortFilms} />
-      {isError ? <p className='movies-list__error'>{errorMessage}</p>
+      {(isError || isNotFound)
+        ? (
+          <p className='movies-list__error'>
+            {isError
+              ? errorMessage
+              : notFoundMessage}
+          </p>
+        )
         : (
           <MoviesList
             component={FavMovie}
@@ -72,6 +119,9 @@ FavouriteMoviesPage.propTypes = {
   columns: PropTypes.number.isRequired,
   onMovieLike: PropTypes.func.isRequired,
   onMovieDislike: PropTypes.func.isRequired,
+  term: PropTypes.string.isRequired,
+  isShort: PropTypes.bool.isRequired,
+  onSearchSubmit: PropTypes.func.isRequired,
   isError: PropTypes.bool,
   errorMessage: PropTypes.string,
 };

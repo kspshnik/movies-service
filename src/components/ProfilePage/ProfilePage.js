@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-// import currentUserContext from '../../contexts/currentUserContext'
+import { useLocation } from 'react-router-dom';
+import currentUserContext from '../../contexts/currentUserContext';
 
 import './ProfilePage.css';
 
 function ProfilePage({ onSubmitProfile, onSignOut }) {
-// const user = useContext(currentUserContext);
-  const [name, setName] = useState('Виталий');
-  const [email, setEmail] = useState('pochta@gde.to');
+  const user = useContext(currentUserContext);
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isNameValid, setNameValidity] = useState(true);
   const [isEmailValid, setEmailValidity] = useState(true);
-  // const hasAnythingChanged = () => name !== user.name || email !== user.email;
+
+  const [isProfileUpdateInProgress, setProfileUpdateState] = useState(false);
+
+  const title = `Привет, ${user.name}!`;
+
+  const location = useLocation();
+  useEffect(() => {
+    localStorage.setItem('movies-path', location.pathname);
+  });
 
   const isFormValid = () => isNameValid && isEmailValid; //  & hasAnythingChanged;
 
@@ -39,13 +48,14 @@ function ProfilePage({ onSubmitProfile, onSignOut }) {
   }
   function handleSubmit(event) {
     event.preventDefault();
-    onSubmitProfile(name, email);
+    setProfileUpdateState(true);
+    onSubmitProfile(name, email, setProfileUpdateState);
   }
 
   return (
     <main className='profile'>
       <section className='profile__lead'>
-        <h2 className='profile__heading'>Привет, Виталий!</h2>
+        <h2 className='profile__heading'>{title}</h2>
       </section>
       <form
         name='ProfileForm'
@@ -64,7 +74,9 @@ function ProfilePage({ onSubmitProfile, onSignOut }) {
               minLength='2'
               maxLength='40'
               value={name}
-              onChange={handleNameChange} />
+              onChange={handleNameChange}
+              disabled={isProfileUpdateInProgress}
+              autoComplete='name' />
           </div>
           <span
             id='name-input-error'
@@ -85,7 +97,9 @@ function ProfilePage({ onSubmitProfile, onSignOut }) {
               minLength='2'
               maxLength='200'
               value={email}
-              onChange={handleEmailChange} />
+              onChange={handleEmailChange}
+              disabled={isProfileUpdateInProgress}
+              autoComplete='email' />
           </div>
           <span
             id='title-input-error'
@@ -98,7 +112,7 @@ function ProfilePage({ onSubmitProfile, onSignOut }) {
             type='submit'
             className='profile__submit'
             onClick={handleSubmit}
-            disabled={!isFormValid()}>
+            disabled={!isFormValid() || isProfileUpdateInProgress}>
             Редактировать
           </button>
           <button

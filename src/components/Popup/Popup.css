@@ -1,0 +1,85 @@
+.popup {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  visibility: hidden;
+  height: calc(100vh - 1px);
+  width: calc(100vw - 1px);
+  border: none;
+  margin: 0;
+  padding: 0;
+  z-index: 11;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s, ease-in-out, 0.5s;
+  background-color: rgba(0, 0, 0, 0.5);
+  }
+
+.popup_content_tooltip {
+  z-index: 115;
+  background-color: rgba(0,0,0,0.5);
+  }
+
+.popup__container_content_tooltip {
+  position: fixed;
+  top: 30vh;
+  left: 30vw;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-radius: 10px;
+  width: 40vw;
+  padding: 50px 0;
+  min-height: 310px;
+  }
+
+.popup__close {
+  position: absolute;
+  box-sizing: border-box;
+  background-color: transparent;
+  background-size: contain;
+  background-image: url('../../images/Сlose-button.svg');
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 42px;
+  height: 42px;
+  top: -42px;
+  right: -42px;
+  }
+
+.popup__close:hover {
+  opacity: 0.6;
+  transition: 0.7s ease-in-out;
+  cursor: pointer;
+  }
+
+
+.popup_opened {
+  visibility: visible;
+  opacity: 1;
+  }
+
+.popup__tooltip {
+  font-weight: 900;
+  font-size: 20px;
+  line-height: 1.2;
+  text-align: center;
+  color: #000000;
+  margin: 40px 0 0 0;
+  padding: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  }
+
+
+@media screen and (max-width: 582px) {
+  .popup {
+    padding: 0 30px;
+    }
+  }

@@ -23,16 +23,13 @@ function SignUpPage({ onSignUpSubmit }) {
   const [nameError, setNameError] = useState('');
   const [isFormValid, setFormValidityState] = useState(false);
 
-  // const user = useContext(currentUserContext);
-  const isLoggedIn = false;
+  const [isSignupInProgress, setSignupState] = useState(false);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      setEmail('');
-      setPassword('');
-      setName('');
-    }
-  }, [isLoggedIn]);
+    setEmail('');
+    setPassword('');
+    setName('');
+  }, []);
 
   useEffect(() => {
     setFormValidityState(isEmailValid
@@ -81,7 +78,8 @@ function SignUpPage({ onSignUpSubmit }) {
    */
   function handleSubmit(event) {
     event.preventDefault();
-    onSignUpSubmit(email, password);
+    setSignupState(true);
+    onSignUpSubmit(name, email, password, setSignupState);
   }
 
   return (
@@ -112,7 +110,9 @@ function SignUpPage({ onSignUpSubmit }) {
               value={name}
               onChange={handleNameChange}
               placeholder='Имя'
-              aria-label='Поле ввода имени' />
+              aria-label='Поле ввода имени'
+              autoComplete='name'
+              disabled={isSignupInProgress} />
             <span
               id='signup-name-input-error'
               className='credentials__error-message'>
@@ -130,7 +130,9 @@ function SignUpPage({ onSignUpSubmit }) {
               value={email}
               onChange={handleEmailChange}
               placeholder='E-Mail'
-              aria-label='Поле ввода адреса электронной почты' />
+              aria-label='Поле ввода адреса электронной почты'
+              autoComplete='email'
+              disabled={isSignupInProgress} />
             <span
               id='signup-email-input-error'
               className='credentials__error-message'>
@@ -148,7 +150,9 @@ function SignUpPage({ onSignUpSubmit }) {
               value={password}
               onChange={handlePasswordChange}
               placeholder='Пароль'
-              aria-label='Поле  ввода пароля' />
+              aria-label='Поле  ввода пароля'
+              autoComplete='new-password'
+              disabled={isSignupInProgress} />
             <span
               id='signin-confirm-input-error'
               className='credentials__error-message'>
@@ -160,7 +164,7 @@ function SignUpPage({ onSignUpSubmit }) {
               type='submit'
               className='credentials__submit'
               onClick={handleSubmit}
-              disabled={!isFormValid}
+              disabled={!isFormValid || isSignupInProgress}
               aria-label='Кнопка регистрации'>
               Зарегистрироваться
             </button>

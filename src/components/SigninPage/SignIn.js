@@ -1,10 +1,10 @@
 import React, {
   useState, useEffect,
 } from 'react';
+import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../images/Logo.svg';
 
 function SignInPage({ onSignInSubmit }) {
@@ -16,15 +16,12 @@ function SignInPage({ onSignInSubmit }) {
   const [passwordError, setPasswordError] = useState('');
   const [isFormValid, setFormValidityState] = useState(false);
 
-  //  const user = useContext(currentUserContext);
-  const isLoggedIn = false;
+  const [isSigninInProgress, setSigninState] = useState(false);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      setEmail('');
-      setPassword('');
-    }
-  }, [isLoggedIn]);
+    setEmail('');
+    setPassword('');
+  }, []);
 
   useEffect(() => {
     setFormValidityState(isEmailValid
@@ -60,7 +57,8 @@ function SignInPage({ onSignInSubmit }) {
    */
   function handleSubmit(event) {
     event.preventDefault();
-    onSignInSubmit(email, password);
+    setSigninState(true);
+    onSignInSubmit(email, password, setSigninState);
   }
 
   return (
@@ -89,7 +87,9 @@ function SignInPage({ onSignInSubmit }) {
               value={email}
               onChange={handleEmailChange}
               placeholder='E-mail'
-              aria-label='Поле ввода адреса электронной почты' />
+              aria-label='Поле ввода адреса электронной почты'
+              autoComplete='email'
+              disabled={isSigninInProgress} />
             <span
               id='signin-email-input-error'
               className='credentials__error-message'>
@@ -107,7 +107,9 @@ function SignInPage({ onSignInSubmit }) {
               value={password}
               onChange={handlePasswordChange}
               placeholder='Пароль'
-              aria-label='Поле ввода пароля' />
+              aria-label='Поле ввода пароля'
+              autoComplete='current-password'
+              disabled={isSigninInProgress} />
             <span
               id='signin-password-input-error'
               className='credentials__error-message'>
@@ -119,9 +121,9 @@ function SignInPage({ onSignInSubmit }) {
               type='submit'
               className='credentials__submit'
               onClick={handleSubmit}
-              disabled={!isFormValid}
-              aria-label='Кнопка регистрации'>
-              Зарегистрироваться
+              disabled={!isFormValid || isSigninInProgress}
+              aria-label='Кнопка входа'>
+              Войти
             </button>
             <div className='credentials__linkarea'>
               <span className='credentials__question'>Ещё не зарегистрированы? &nbsp;</span>
