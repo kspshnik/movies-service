@@ -10,6 +10,7 @@ import MoreButton from './MoreButton';
 import { reduceSearch } from '../../helpers/movieReducers';
 
 import './MoviesPages.css';
+import { EXPIRY_TRESHOLD } from '../../movies-service.config';
 
 function MoviesPage({
   allMovies,
@@ -29,6 +30,7 @@ function MoviesPage({
   const [isMoreShown, setMoreStatus] = useState(rows * columns <= foundMovies.length);
   const [isNotFound, setNotFound] = useState(false);
   const [noRequest, setSearchState] = useState(true);
+  const [isFirstRun, setFirstRun] = useState(true);
 
   const [isPreloaderShown, setPreloaderState] = useState(false);
   const increaseRows = () => {
@@ -52,15 +54,39 @@ function MoviesPage({
     setSearchState(keyword.length === 0);
     onSearchSubmit(keyword, isShort, setPreloaderState);
   }
+  useEffect(() => {
+    if (!isFirstRun) {
+      if (foundMovies.length > 0) {
+        localStorage.setItem('all-found', JSON.stringify({ age: Date.now(), data: foundMovies }));
+      } else if ((foundMovies.length === 0) && (term.length === 0)) {
+        localStorage.setItem('all-found', JSON.stringify({ age: Date.now(), data: [] }));
+      }
+    }
+  }, [foundMovies, isFirstRun, term]);
 
   useEffect(() => {
-    if ((term.length > 0 || isShort) && allMovies && allMovies.length > 0) {
+    if ('all-found' in localStorage) {
+      const moviesData = JSON.parse(localStorage.getItem('all-found'));
+      if ((Date.now() - moviesData.age) < EXPIRY_TRESHOLD) {
+        setFoundMovies(moviesData.data);
+      } else {
+        localStorage.removeItem('all-found');
+        setFoundMovies([]);
+      }
+    } else {
+      setFoundMovies([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (((term.length > 0 || isShort) && allMovies && allMovies.length > 0) && (!isFirstRun || !('all-found' in localStorage))) {
       setFoundMovies(allMovies.filter((film) => reduceSearch(film, term, isShort)));
     } else {
       setSearchState(true);
       setFoundMovies([]);
     }
-  }, [term, isShort, allMovies]);
+    setFirstRun(false);
+  }, [term, isShort, allMovies, isFirstRun]);
 
   useEffect(() => {
     setNotFound(foundMovies.length === 0);
