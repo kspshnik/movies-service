@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {
+  useState, useEffect, useMemo,
+} from 'react';
 import {
   Switch, Route, useHistory,
 } from 'react-router-dom';
